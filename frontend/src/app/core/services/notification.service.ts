@@ -44,4 +44,12 @@ export class NotificationService {
       })
     );
   }
+
+  clearReadNotifications() {
+    return this.api.post<{ message: string; clearedCount: number }>('/notifications/clear-read', {}).pipe(
+      tap(() => {
+        this.notifications.update(list => list.filter(n => !n.isRead));
+      })
+    );
+  }
 }

@@ -53,9 +53,16 @@ import { ToastService } from '../../shared/components/toast/toast.service';
 
         <!-- In-app Notification Bell -->
         <div class="relative">
+          <!-- Click-outside transparent backdrop to auto-close notifications -->
+          <div
+            *ngIf="showNotifications()"
+            (click)="showNotifications.set(false)"
+            class="fixed inset-0 z-40"
+          ></div>
+
           <button
             (click)="toggleNotifications()"
-            class="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors relative"
+            class="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors relative z-50"
             title="Notifications"
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,6 +176,7 @@ export class HeaderComponent implements OnInit {
     this.notifService.markAllAsRead().subscribe({
       next: () => {
         this.toast.success('All notifications marked as read.');
+        this.showNotifications.set(false);
       }
     });
   }

@@ -11,11 +11,14 @@ class NotificationRepository extends baseXmlRepository_1.BaseXmlRepository {
         const data = await this.getFullData();
         return data.notifications.find(n => n.id === id) || null;
     }
-    async getForUser(userId, role, orgId) {
+    async getForUser(userId, role, orgId, includeRead = false) {
         const data = await this.getFullData();
         return data.notifications
             .filter(n => {
             if (n.organizationId !== orgId)
+                return false;
+            // Omit notifications that have been marked as read so they clear on browser refresh
+            if (!includeRead && n.isRead)
                 return false;
             if (n.recipientId === userId)
                 return true;
@@ -24,6 +27,23 @@ class NotificationRepository extends baseXmlRepository_1.BaseXmlRepository {
             return false;
         })
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
+    async clearReadNotifications(userId, role, orgId) {
+        const data = await this.getFullData();
+        const initialLen = data.notifications.length;
+        data.notifications = data.notifications.filter(n => {
+            if (n.organizationId === orgId &&
+                (n.recipientId === userId || (role === 'ADMIN' && n.recipientId === 'ALL_ADMINS')) &&
+                n.isRead) {
+                return false;
+            }
+            return true;
+        });
+        const deletedCount = initialLen - data.notifications.length;
+        if (deletedCount > 0) {
+            await this.saveFullData(data, `Clear ${deletedCount} read notifications for user ${userId}`);
+        }
+        return deletedCount;
     }
     async create(notification) {
         const data = await this.getFullData();

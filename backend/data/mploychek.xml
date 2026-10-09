@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mploychekData schemaVersion="1.0" lastUpdated="2026-10-09T11:30:33.849Z" updateReason="Seed fresh enterprise dataset with near-now upcoming deadlines">
+<mploychekData schemaVersion="1.0" lastUpdated="2026-10-09T11:46:17.971Z" updateReason="Append Audit Event audit-9d29e758 (VERIFICATION_DECISION)">
   <organizations>
     <organization>
       <id>org-001</id>
@@ -23,8 +23,9 @@
       <department>Workforce Compliance &amp; Trust</department>
       <title>Chief Compliance Officer</title>
       <phone>+1 (555) 234-5678</phone>
+      <lastLoginAt>2026-10-09T11:46:17.731Z</lastLoginAt>
       <createdAt>2026-01-15T08:30:00.000Z</createdAt>
-      <updatedAt>2026-01-15T08:30:00.000Z</updatedAt>
+      <updatedAt>2026-10-09T11:46:17.735Z</updatedAt>
     </user>
     <user>
       <id>usr-user-01</id>
@@ -37,8 +38,9 @@
       <department>Talent Acquisition &amp; HR Operations</department>
       <title>Senior Talent Operations Specialist</title>
       <phone>+1 (555) 345-6789</phone>
+      <lastLoginAt>2026-10-09T11:46:17.810Z</lastLoginAt>
       <createdAt>2026-01-20T09:00:00.000Z</createdAt>
-      <updatedAt>2026-01-20T09:00:00.000Z</updatedAt>
+      <updatedAt>2026-10-09T11:46:17.813Z</updatedAt>
     </user>
     <user>
       <id>usr-user-02</id>
@@ -73,13 +75,13 @@
       <compensationGrade>L7 - Executive Fellow</compensationGrade>
       <internalAssessmentNotes>Ph.D. credentials and past employment verified at Stanford alumni portal.</internalAssessmentNotes>
       <publicReviewerNotes>All credential documentation verified without discrepancy.</publicReviewerNotes>
+      <confidenceScore>100</confidenceScore>
+      <confidenceLevel>HIGH</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:100,&quot;level&quot;:&quot;HIGH&quot;,&quot;summary&quot;:&quot;High confidence: Documentation is well-attested, verified by reviewers, and background checks are clear.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;2 document(s) uploaded covering [OFFER_LETTER, DEGREE_CERTIFICATE].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-03-10.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.834Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2027-03-01</followUpDeadline>
       <createdBy>usr-user-01</createdBy>
       <createdAt>2026-09-01T10:00:00.000Z</createdAt>
       <updatedAt>2026-09-05T14:35:00.000Z</updatedAt>
-      <confidenceScore>100</confidenceScore>
-      <confidenceLevel>HIGH</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:100,&quot;level&quot;:&quot;HIGH&quot;,&quot;summary&quot;:&quot;High confidence: Documentation is well-attested, verified by reviewers, and background checks are clear.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;2 document(s) uploaded covering [OFFER_LETTER, DEGREE_CERTIFICATE].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-03-10.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.834Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-002</id>
@@ -97,13 +99,13 @@
       <compensationGrade>L6 - Principal Architect</compensationGrade>
       <internalAssessmentNotes>Review in progress; certifications submitted for verification.</internalAssessmentNotes>
       <publicReviewerNotes>Credentials in active review queue.</publicReviewerNotes>
+      <confidenceScore>28</confidenceScore>
+      <confidenceLevel>LOW</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:28,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2026-11-20</followUpDeadline>
       <createdBy>usr-user-01</createdBy>
       <createdAt>2026-09-10T09:00:00.000Z</createdAt>
       <updatedAt>2026-09-18T16:05:00.000Z</updatedAt>
-      <confidenceScore>28</confidenceScore>
-      <confidenceLevel>LOW</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:28,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-003</id>
@@ -122,13 +124,13 @@
       <compensationGrade>C3 - Principal Consultant</compensationGrade>
       <internalAssessmentNotes>Verified engagement contract and professional portfolio attestation.</internalAssessmentNotes>
       <publicReviewerNotes>Contract and credentials verified.</publicReviewerNotes>
+      <confidenceScore>85</confidenceScore>
+      <confidenceLevel>HIGH</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:85,&quot;level&quot;:&quot;HIGH&quot;,&quot;summary&quot;:&quot;High confidence: Documentation is well-attested, verified by reviewers, and background checks are clear.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:10,&quot;weight&quot;:25,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 document(s) uploaded covering [REFERENCE_LETTER].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-06-12.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2027-06-01</followUpDeadline>
       <createdBy>usr-user-02</createdBy>
       <createdAt>2026-09-08T11:20:00.000Z</createdAt>
       <updatedAt>2026-09-12T14:05:00.000Z</updatedAt>
-      <confidenceScore>85</confidenceScore>
-      <confidenceLevel>HIGH</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:85,&quot;level&quot;:&quot;HIGH&quot;,&quot;summary&quot;:&quot;High confidence: Documentation is well-attested, verified by reviewers, and background checks are clear.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:10,&quot;weight&quot;:25,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 document(s) uploaded covering [REFERENCE_LETTER].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:25,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-06-12.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-004</id>
@@ -146,13 +148,13 @@
       <compensationGrade>L6 - Principal Security Lead</compensationGrade>
       <internalAssessmentNotes>Holding review pending subsidiary EIN confirmation on Form W-2.</internalAssessmentNotes>
       <publicReviewerNotes>Clarification inquiry issued regarding Tax Form EIN discrepancy.</publicReviewerNotes>
+      <confidenceScore>53</confidenceScore>
+      <confidenceLevel>MEDIUM</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:53,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:15,&quot;weight&quot;:25,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 document(s) uploaded covering [TAX_FORM_W2].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;0/1 documents verified. 1 flagged, 0 rejected.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:10,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 open inquiry ticket(s) awaiting worker/employer clarification (0 overdue).&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2026-11-15</followUpDeadline>
       <createdBy>usr-user-01</createdBy>
       <createdAt>2026-09-15T15:00:00.000Z</createdAt>
       <updatedAt>2026-10-02T16:05:00.000Z</updatedAt>
-      <confidenceScore>53</confidenceScore>
-      <confidenceLevel>MEDIUM</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:53,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:15,&quot;weight&quot;:25,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 document(s) uploaded covering [TAX_FORM_W2].&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;0/1 documents verified. 1 flagged, 0 rejected.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:10,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;1 open inquiry ticket(s) awaiting worker/employer clarification (0 overdue).&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-005</id>
@@ -171,13 +173,13 @@
       <compensationGrade>L6 - Legal Counsel</compensationGrade>
       <internalAssessmentNotes>Bar association credentials and background check fully verified.</internalAssessmentNotes>
       <publicReviewerNotes>Legal credentials verified.</publicReviewerNotes>
+      <confidenceScore>70</confidenceScore>
+      <confidenceLevel>MEDIUM</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-01-20.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2027-01-15</followUpDeadline>
       <createdBy>usr-user-02</createdBy>
       <createdAt>2026-09-05T14:00:00.000Z</createdAt>
       <updatedAt>2026-09-10T16:30:00.000Z</updatedAt>
-      <confidenceScore>70</confidenceScore>
-      <confidenceLevel>MEDIUM</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2025-01-20.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-006</id>
@@ -190,16 +192,17 @@
       <startDate>2026-01-15</startDate>
       <verificationStatus>PENDING</verificationStatus>
       <backgroundCheckStatus>NOT_STARTED</backgroundCheckStatus>
+      <backgroundCheckDate>2026-10-09</backgroundCheckDate>
       <compensationGrade>L5 - Controller</compensationGrade>
       <internalAssessmentNotes>New profile created. Awaiting evidence documents in Evidence Vault.</internalAssessmentNotes>
       <publicReviewerNotes>Awaiting submission of verification credentials.</publicReviewerNotes>
+      <confidenceScore>20</confidenceScore>
+      <confidenceLevel>LOW</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:20,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Background check has not commenced.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:40:49.880Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2026-11-30</followUpDeadline>
       <createdBy>usr-user-01</createdBy>
       <createdAt>2026-09-20T09:00:00.000Z</createdAt>
-      <updatedAt>2026-09-20T09:00:00.000Z</updatedAt>
-      <confidenceScore>20</confidenceScore>
-      <confidenceLevel>LOW</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:20,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Background check has not commenced.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
+      <updatedAt>2026-10-09T11:40:49.891Z</updatedAt>
     </record>
     <record>
       <id>rec-007</id>
@@ -218,13 +221,13 @@
       <compensationGrade>L6 - Staff Engineer</compensationGrade>
       <internalAssessmentNotes>All background checks and past employment records attested.</internalAssessmentNotes>
       <publicReviewerNotes>Annual audit completed successfully.</publicReviewerNotes>
+      <confidenceScore>70</confidenceScore>
+      <confidenceLevel>MEDIUM</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2024-11-15.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2027-11-01</followUpDeadline>
       <createdBy>usr-user-02</createdBy>
       <createdAt>2026-09-02T10:00:00.000Z</createdAt>
       <updatedAt>2026-09-08T10:00:00.000Z</updatedAt>
-      <confidenceScore>70</confidenceScore>
-      <confidenceLevel>MEDIUM</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2024-11-15.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
     </record>
     <record>
       <id>rec-008</id>
@@ -242,13 +245,36 @@
       <compensationGrade>L6 - Director</compensationGrade>
       <internalAssessmentNotes>Clarification received and under final review.</internalAssessmentNotes>
       <publicReviewerNotes>Clarification response submitted and in queue for secondary review.</publicReviewerNotes>
+      <confidenceScore>28</confidenceScore>
+      <confidenceLevel>LOW</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:28,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
       <followUpDeadline>2026-12-10</followUpDeadline>
       <createdBy>usr-user-01</createdBy>
       <createdAt>2026-09-18T13:00:00.000Z</createdAt>
       <updatedAt>2026-10-01T14:00:00.000Z</updatedAt>
-      <confidenceScore>28</confidenceScore>
-      <confidenceLevel>LOW</confidenceLevel>
-      <confidenceBreakdownJson>{&quot;score&quot;:28,&quot;level&quot;:&quot;LOW&quot;,&quot;summary&quot;:&quot;Low confidence: Significant documentation gaps, unresolved queries, or unverified credentials present.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting document submissions for verification review.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:8,&quot;weight&quot;:15,&quot;status&quot;:&quot;ACCEPTABLE&quot;,&quot;explanation&quot;:&quot;Background verification is currently in active processing with screening partner.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:0,&quot;weight&quot;:15,&quot;status&quot;:&quot;NEEDS_ATTENTION&quot;,&quot;explanation&quot;:&quot;Awaiting evidence documents before due diligence inquiry clearance can commence.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:30:33.835Z&quot;}</confidenceBreakdownJson>
+    </record>
+    <record>
+      <id>rec-3a7cbd3c</id>
+      <employeeId>EMP-UNIT-01</employeeId>
+      <employeeName>Unit Test Worker</employeeName>
+      <organizationId>org-001</organizationId>
+      <department>Technology</department>
+      <jobTitle>Software Architect</jobTitle>
+      <employmentType>FULL_TIME</employmentType>
+      <startDate>2026-01-01</startDate>
+      <verificationStatus>VERIFIED</verificationStatus>
+      <backgroundCheckStatus>PASSED</backgroundCheckStatus>
+      <backgroundCheckDate>2026-10-09</backgroundCheckDate>
+      <assignedReviewerId>usr-admin-01</assignedReviewerId>
+      <assignedReviewerName>Eleanor Vance</assignedReviewerName>
+      <internalAssessmentNotes>Confidential reviewer notes - verified</internalAssessmentNotes>
+      <publicReviewerNotes>Public approval notice</publicReviewerNotes>
+      <confidenceScore>70</confidenceScore>
+      <confidenceLevel>MEDIUM</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2026-10-09.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T11:46:17.944Z&quot;}</confidenceBreakdownJson>
+      <createdBy>usr-user-01</createdBy>
+      <createdAt>2026-10-09T11:46:17.903Z</createdAt>
+      <updatedAt>2026-10-09T11:46:17.947Z</updatedAt>
     </record>
   </employmentRecords>
   <evidenceItems>
@@ -403,6 +429,35 @@
       <scoreDelta>-10</scoreDelta>
       <timestamp>2026-10-02T16:05:00.000Z</timestamp>
     </event>
+    <event>
+      <id>ev-566e1074</id>
+      <recordId>rec-3a7cbd3c</recordId>
+      <organizationId>org-001</organizationId>
+      <eventType>RECORD_CREATED</eventType>
+      <title>Employment Record Created</title>
+      <description>Record initiated for Unit Test Worker (EMP-UNIT-01) by Marcus Chen. Baseline trust confidence evaluated at 20/100.</description>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <newStatus>PENDING</newStatus>
+      <scoreDelta>20</scoreDelta>
+      <timestamp>2026-10-09T11:46:17.903Z</timestamp>
+    </event>
+    <event>
+      <id>ev-c3fea8f4</id>
+      <recordId>rec-3a7cbd3c</recordId>
+      <organizationId>org-001</organizationId>
+      <eventType>DECISION_RECORDED</eventType>
+      <title>Verification Decision: VERIFIED</title>
+      <description>Reviewer Eleanor Vance recorded decision: VERIFIED. Reason: Credentials thoroughly reviewed during automated test pass.</description>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <previousStatus>PENDING</previousStatus>
+      <newStatus>VERIFIED</newStatus>
+      <scoreDelta>50</scoreDelta>
+      <timestamp>2026-10-09T11:46:17.939Z</timestamp>
+    </event>
   </verificationEvents>
   <clarificationRequests>
     <clarification>
@@ -548,10 +603,35 @@
       <isRead>true</isRead>
       <createdAt>2026-10-09T09:30:00.000Z</createdAt>
     </notification>
+    <notification>
+      <id>notif-4886f2ec</id>
+      <recipientId>ALL_ADMINS</recipientId>
+      <organizationId>org-001</organizationId>
+      <title>New Employment Record Created</title>
+      <message>Marcus Chen submitted a new employment record for Unit Test Worker.</message>
+      <category>STATUS_CHANGE</category>
+      <targetType>RECORD</targetType>
+      <targetId>rec-3a7cbd3c</targetId>
+      <isRead>false</isRead>
+      <createdAt>2026-10-09T11:46:17.903Z</createdAt>
+    </notification>
+    <notification>
+      <id>notif-9b3f4e8f</id>
+      <recipientId>usr-user-01</recipientId>
+      <organizationId>org-001</organizationId>
+      <title>Verification Decision: VERIFIED</title>
+      <message>The verification status for Unit Test Worker has been updated to VERIFIED. Notes: Credentials thoroughly reviewed during automated test pass.</message>
+      <category>STATUS_CHANGE</category>
+      <targetType>RECORD</targetType>
+      <targetId>rec-3a7cbd3c</targetId>
+      <isRead>false</isRead>
+      <createdAt>2026-10-09T11:46:17.939Z</createdAt>
+    </notification>
   </notifications>
   <auditEvents>
     <auditEvent>
       <id>audit-001</id>
+      <timestamp>2026-10-09T08:00:00.000Z</timestamp>
       <actorId>usr-admin-01</actorId>
       <actorName>Eleanor Vance</actorName>
       <actorRole>ADMIN</actorRole>
@@ -564,10 +644,10 @@
       <ip>127.0.0.1</ip>
       <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64)</userAgent>
       <reason>Administrator session initiated via multi-factor credentials.</reason>
-      <timestamp>2026-10-09T08:00:00.000Z</timestamp>
     </auditEvent>
     <auditEvent>
       <id>audit-002</id>
+      <timestamp>2026-10-09T08:35:00.000Z</timestamp>
       <actorId>usr-admin-01</actorId>
       <actorName>Eleanor Vance</actorName>
       <actorRole>ADMIN</actorRole>
@@ -580,10 +660,10 @@
       <ip>127.0.0.1</ip>
       <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64)</userAgent>
       <reason>Full credential review cleared; background checks passed.</reason>
-      <timestamp>2026-10-09T08:35:00.000Z</timestamp>
     </auditEvent>
     <auditEvent>
       <id>audit-003</id>
+      <timestamp>2026-10-09T09:15:00.000Z</timestamp>
       <actorId>usr-admin-01</actorId>
       <actorName>Eleanor Vance</actorName>
       <actorRole>ADMIN</actorRole>
@@ -596,7 +676,163 @@
       <ip>127.0.0.1</ip>
       <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64)</userAgent>
       <reason>W-2 EIN reconciliation discrepancy inquiry issued.</reason>
-      <timestamp>2026-10-09T09:15:00.000Z</timestamp>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-b107e0de</id>
+      <timestamp>2026-10-09T11:40:02.088Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-778c5486</requestId>
+      <ip>::1</ip>
+      <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-aa4047fd</id>
+      <timestamp>2026-10-09T11:40:47.852Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>RECORD_UPDATE</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-006</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-5684574c</requestId>
+      <ip>::1</ip>
+      <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36</userAgent>
+      <metadataJson>{&quot;changedFields&quot;:[&quot;backgroundCheckStatus&quot;,&quot;backgroundCheckDate&quot;,&quot;confidenceScore&quot;,&quot;confidenceLevel&quot;,&quot;confidenceBreakdownJson&quot;]}</metadataJson>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-cb167d15</id>
+      <timestamp>2026-10-09T11:40:49.914Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>RECORD_UPDATE</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-006</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-7638cdf9</requestId>
+      <ip>::1</ip>
+      <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36</userAgent>
+      <metadataJson>{&quot;changedFields&quot;:[&quot;backgroundCheckStatus&quot;,&quot;confidenceScore&quot;,&quot;confidenceLevel&quot;,&quot;confidenceBreakdownJson&quot;]}</metadataJson>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-94815a32</id>
+      <timestamp>2026-10-09T11:46:03.750Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-94389253</requestId>
+      <ip>::1</ip>
+      <userAgent>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-3f63cc23</id>
+      <timestamp>2026-10-09T11:46:17.743Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-8446d2e5</id>
+      <timestamp>2026-10-09T11:46:17.819Z</timestamp>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-user-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-f56baad3</id>
+      <timestamp>2026-10-09T11:46:17.884Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_FAILED</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>FAILURE</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>Invalid password credentials</reason>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-c210e976</id>
+      <timestamp>2026-10-09T11:46:17.894Z</timestamp>
+      <actorId>anonymous</actorId>
+      <actorName>nonexistent@test.com</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>unknown</organizationId>
+      <actionType>AUTH_LOGIN_FAILED</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>nonexistent@test.com</entityId>
+      <outcome>FAILURE</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>User not found</reason>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-a9143f1d</id>
+      <timestamp>2026-10-09T11:46:17.927Z</timestamp>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>RECORD_CREATE</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-3a7cbd3c</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <metadataJson>{&quot;employeeName&quot;:&quot;Unit Test Worker&quot;,&quot;employeeId&quot;:&quot;EMP-UNIT-01&quot;}</metadataJson>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-9d29e758</id>
+      <timestamp>2026-10-09T11:46:17.968Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>VERIFICATION_DECISION</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-3a7cbd3c</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>Credentials thoroughly reviewed during automated test pass.</reason>
+      <metadataJson>{&quot;previousStatus&quot;:&quot;PENDING&quot;,&quot;newStatus&quot;:&quot;VERIFIED&quot;}</metadataJson>
     </auditEvent>
   </auditEvents>
 </mploychekData>

@@ -10,5 +10,7 @@ router.use(authenticateToken);
 router.get('/', notifController.getNotifications);
 router.patch('/:id/read', notifController.markAsRead);
 router.patch('/read-all', notifController.markAllAsRead);
+router.delete('/read', notifController.clearRead);
+router.post('/clear-read', notifController.clearRead);
 
 export default router;

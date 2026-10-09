@@ -10,7 +10,8 @@ class NotificationController {
     getNotifications = async (req, res, next) => {
         try {
             const user = req.user;
-            const notifications = await this.notifService.getNotifications(user);
+            const includeRead = req.query.includeRead === 'true';
+            const notifications = await this.notifService.getNotifications(user, includeRead);
             res.json({
                 success: true,
                 data: notifications
@@ -44,6 +45,20 @@ class NotificationController {
                 success: true,
                 message: `Marked ${count} notifications as read`,
                 updatedCount: count
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    };
+    clearRead = async (req, res, next) => {
+        try {
+            const user = req.user;
+            const count = await this.notifService.clearRead(user);
+            res.json({
+                success: true,
+                message: `Cleared ${count} read notifications`,
+                clearedCount: count
             });
         }
         catch (err) {

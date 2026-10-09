@@ -7,14 +7,17 @@ class NotificationService {
     constructor() {
         this.notifRepo = new notificationRepository_1.NotificationRepository();
     }
-    async getNotifications(currentUser) {
-        return this.notifRepo.getForUser(currentUser.id, currentUser.role, currentUser.organizationId);
+    async getNotifications(currentUser, includeRead = false) {
+        return this.notifRepo.getForUser(currentUser.id, currentUser.role, currentUser.organizationId, includeRead);
     }
     async markAsRead(id, currentUser) {
         return this.notifRepo.markAsRead(id, currentUser.id, currentUser.role);
     }
     async markAllAsRead(currentUser) {
         return this.notifRepo.markAllAsRead(currentUser.id, currentUser.role, currentUser.organizationId);
+    }
+    async clearRead(currentUser) {
+        return this.notifRepo.clearReadNotifications(currentUser.id, currentUser.role, currentUser.organizationId);
     }
 }
 exports.NotificationService = NotificationService;
