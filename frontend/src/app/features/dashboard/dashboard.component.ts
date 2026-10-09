@@ -113,7 +113,7 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           [value]="metrics()!.averageConfidenceScore + '/100'"
           subtitle="Rules-Based Verification Confidence"
           route="/analytics"
-          badgeText="Enterprise Benchmark"
+          badgeText="Benchmark"
           badgeClass="bg-purple-500/10 text-purple-300 border border-purple-500/20"
           iconBgClass="bg-purple-500/10 text-purple-400"
           glowClass="bg-purple-500"

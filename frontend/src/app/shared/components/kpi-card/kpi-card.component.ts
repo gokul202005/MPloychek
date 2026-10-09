@@ -21,9 +21,9 @@ import { Router } from '@angular/router';
         </div>
       </div>
 
-      <div class="flex items-baseline justify-between">
-        <div class="text-3xl font-extrabold tracking-tight text-white font-mono">{{ value }}</div>
-        <span *ngIf="badgeText" class="text-xs font-medium px-2 py-0.5 rounded-full" [ngClass]="badgeClass">
+      <div class="flex items-baseline justify-between gap-3 flex-wrap">
+        <div class="text-3xl font-extrabold tracking-tight text-white font-mono shrink-0">{{ value }}</div>
+        <span *ngIf="badgeText" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap" [ngClass]="badgeClass">
           {{ badgeText }}
         </span>
       </div>
