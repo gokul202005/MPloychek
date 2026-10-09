@@ -17,6 +17,7 @@ export class RecordService {
     sortOrder?: 'asc' | 'desc';
     page?: number;
     limit?: number;
+    onlyMine?: boolean;
   }) {
     return this.api.get<PaginatedResponse<EmploymentRecord>>('/records', params);
   }
@@ -39,6 +40,7 @@ export class RecordService {
     publicNotes?: string;
     internalNotes?: string;
     followUpDeadline?: string;
+    backgroundCheckStatus?: 'NOT_STARTED' | 'IN_PROGRESS' | 'PASSED' | 'FLAGGED';
   }) {
     return this.api.post<EmploymentRecord>(`/records/${id}/decision`, payload);
   }

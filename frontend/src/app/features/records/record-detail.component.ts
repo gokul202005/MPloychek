@@ -16,20 +16,30 @@ import {
 } from '../../shared/models';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
 import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gauge/confidence-gauge.component';
+import { PdfViewerModalComponent } from '../../shared/components/pdf-viewer-modal/pdf-viewer-modal.component';
 
 @Component({
   selector: 'app-record-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, StatusBadgeComponent, ConfidenceGaugeComponent],
+  imports: [CommonModule, FormsModule, RouterModule, StatusBadgeComponent, ConfidenceGaugeComponent, PdfViewerModalComponent],
   template: `
     <div class="space-y-6 max-w-7xl mx-auto" *ngIf="record()">
       <!-- Header Breadcrumbs & Actions -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <a routerLink="/records" class="hover:text-white transition-colors">Directory</a>
-            <span>/</span>
-            <span class="text-slate-300 font-mono">{{ record()!.employeeId }}</span>
+          <div class="flex items-center gap-3 text-xs text-slate-400 mb-2">
+            <a
+              routerLink="/records"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-semibold border border-slate-700 transition-colors shadow-sm"
+              title="Return to Verification Directory"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>Back to Directory</span>
+            </a>
+            <span>•</span>
+            <span class="text-slate-400 font-mono">{{ record()!.employeeId }}</span>
           </div>
           <div class="flex items-center gap-3">
             <h1 class="text-2xl font-black text-white tracking-tight">{{ record()!.employeeName }}</h1>
@@ -81,49 +91,108 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
       <!-- Overview Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Core Profile & Timestamps -->
-        <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
-          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Employment Details</h2>
+        <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+            <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7 7z" />
+              </svg>
+              Employment Profile
+            </h2>
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px] font-bold border border-slate-700/60">
+              {{ record()!.employeeId }}
+            </span>
+          </div>
+
           <div class="grid grid-cols-2 gap-3 text-xs">
-            <div>
-              <span class="text-slate-400 block text-[10px]">Employee ID</span>
-              <span class="font-mono font-bold text-white">{{ record()!.employeeId }}</span>
+            <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span class="text-slate-400 block text-[10px] font-medium">Department</span>
+              <span class="text-white font-semibold text-xs truncate block mt-0.5">{{ record()!.department }}</span>
             </div>
-            <div>
-              <span class="text-slate-400 block text-[10px]">Start Date</span>
-              <span class="text-white">{{ record()!.startDate }}</span>
+            <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span class="text-slate-400 block text-[10px] font-medium">Start Date</span>
+              <span class="text-white font-semibold text-xs block mt-0.5">{{ record()!.startDate }}</span>
             </div>
-            <div>
-              <span class="text-slate-400 block text-[10px]">Background Screening</span>
-              <span class="font-semibold text-emerald-400">{{ record()!.backgroundCheckStatus }}</span>
+            <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60 flex flex-col justify-between">
+              <span class="text-slate-400 block text-[10px] font-medium mb-1">Background Screening</span>
+              <div *ngIf="auth.isAdmin()" class="relative">
+                <select
+                  [value]="record()!.backgroundCheckStatus"
+                  (change)="onBackgroundStatusChange($event)"
+                  class="w-full bg-slate-800/90 border border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:border-brand-500 cursor-pointer transition-colors"
+                  [ngClass]="record()!.backgroundCheckStatus === 'PASSED' ? 'text-emerald-400' : record()!.backgroundCheckStatus === 'FLAGGED' ? 'text-rose-400' : 'text-amber-400'"
+                >
+                  <option value="NOT_STARTED" class="bg-slate-900 text-slate-300">NOT STARTED</option>
+                  <option value="IN_PROGRESS" class="bg-slate-900 text-amber-400">IN PROGRESS</option>
+                  <option value="PASSED" class="bg-slate-900 text-emerald-400">PASSED</option>
+                  <option value="FLAGGED" class="bg-slate-900 text-rose-400">FLAGGED</option>
+                </select>
+              </div>
+              <span
+                *ngIf="!auth.isAdmin()"
+                class="font-semibold text-xs block mt-0.5"
+                [ngClass]="record()!.backgroundCheckStatus === 'PASSED' ? 'text-emerald-400' : record()!.backgroundCheckStatus === 'FLAGGED' ? 'text-rose-400' : 'text-amber-400'"
+              >
+                {{ record()!.backgroundCheckStatus }}
+              </span>
             </div>
-            <div>
-              <span class="text-slate-400 block text-[10px]">Follow-up Deadline</span>
-              <span class="text-amber-400 font-mono">{{ record()!.followUpDeadline || 'None' }}</span>
+            <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
+              <span class="text-slate-400 block text-[10px] font-medium">Audit Cycle / Follow-up</span>
+              <span class="text-amber-300 font-medium text-xs block mt-0.5">{{ record()!.followUpDeadline || 'None Required' }}</span>
             </div>
           </div>
 
           <!-- Public Reviewer Notes -->
-          <div *ngIf="record()!.publicReviewerNotes" class="mt-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
-            <span class="text-[10px] text-brand-400 font-semibold block mb-0.5">Reviewer Instructions</span>
-            <p class="text-slate-300 leading-relaxed">{{ record()!.publicReviewerNotes }}</p>
+          <div *ngIf="record()!.publicReviewerNotes" class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs">
+            <span class="text-[10px] text-brand-400 font-bold block mb-1">Reviewer Instructions</span>
+            <p class="text-slate-300 text-xs leading-relaxed">{{ record()!.publicReviewerNotes }}</p>
           </div>
         </div>
 
         <!-- Verification Trust Index Breakdown -->
         <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-3">
-              <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Trust Confidence Score</h2>
-              <app-confidence-gauge [score]="record()!.confidenceScore"></app-confidence-gauge>
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800/80 mb-3">
+              <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Trust Confidence Score
+              </h2>
+              <span
+                class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase font-mono"
+                [ngClass]="record()!.confidenceScore >= 80 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : record()!.confidenceScore >= 50 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'"
+              >
+                {{ record()!.confidenceLevel }} TRUST
+              </span>
             </div>
-            <p class="text-xs text-slate-300 leading-relaxed italic" *ngIf="confidenceBreakdown()">
+
+            <!-- Balanced Gauge & Score Bar -->
+            <div class="flex items-center gap-4 my-2 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+              <app-confidence-gauge [score]="record()!.confidenceScore" [showLabel]="false"></app-confidence-gauge>
+              <div class="flex-1">
+                <div class="flex items-center justify-between text-xs mb-1.5">
+                  <span class="text-white font-bold text-sm">{{ record()!.confidenceScore }}% Confidence</span>
+                  <span class="text-[10px] text-slate-400 font-mono">5 Pillars Evaluated</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-700 ease-out"
+                    [ngClass]="record()!.confidenceScore >= 80 ? 'bg-emerald-500' : record()!.confidenceScore >= 50 ? 'bg-amber-500' : 'bg-rose-500'"
+                    [style.width.%]="record()!.confidenceScore"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed italic mt-2.5" *ngIf="confidenceBreakdown()">
               "{{ confidenceBreakdown()!.summary }}"
             </p>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between font-mono">
-            <span>Deterministic Rules Engine</span>
-            <span>5 Trust Pillars</span>
+          <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+            <span class="text-slate-400 font-medium">Deterministic Rules Engine</span>
+            <span class="text-emerald-400 font-semibold font-mono">100% Auditable</span>
           </div>
         </div>
 
@@ -133,20 +202,26 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           class="glass-panel p-5 rounded-2xl border border-purple-900/40 bg-purple-950/10 flex flex-col justify-between"
         >
           <div>
-            <div class="flex items-center gap-1.5 mb-3">
-              <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <h2 class="text-xs font-bold text-purple-300 uppercase tracking-wider">Confidential Executive Scope</h2>
-            </div>
-            <div class="space-y-2 text-xs">
-              <div>
-                <span class="text-slate-400 block text-[10px]">Compensation Grade</span>
-                <span class="font-mono font-bold text-purple-200">{{ record()!.compensationGrade || 'Unassigned' }}</span>
+            <div class="flex items-center justify-between pb-2 border-b border-purple-900/40 mb-3">
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <h2 class="text-xs font-bold text-purple-300 uppercase tracking-wider">Executive Scope</h2>
               </div>
-              <div>
-                <span class="text-slate-400 block text-[10px]">Internal Assessment Notes</span>
-                <p class="text-slate-300 italic">{{ record()!.internalAssessmentNotes || 'None logged' }}</p>
+              <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-900/40 text-purple-300 border border-purple-700/50">
+                ADMIN RESTRICTED
+              </span>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div class="p-2.5 rounded-xl bg-purple-900/20 border border-purple-800/30">
+                <span class="text-purple-300/70 block text-[10px] font-medium">Compensation Grade</span>
+                <span class="font-semibold text-purple-100 text-xs block mt-0.5">{{ record()!.compensationGrade || 'Unassigned' }}</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-purple-900/20 border border-purple-800/30">
+                <span class="text-purple-300/70 block text-[10px] font-medium">Internal Assessment Notes</span>
+                <p class="text-slate-200 text-xs italic mt-0.5">{{ record()!.internalAssessmentNotes || 'None logged' }}</p>
               </div>
             </div>
           </div>
@@ -159,66 +234,91 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
 
       <!-- Trust Pillars Scoring Breakdown Accordion / Cards -->
       <div *ngIf="confidenceBreakdown()" class="glass-panel p-6 rounded-2xl border border-slate-800">
-        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <span>Trust Score Pillar Breakdown</span>
-          <span class="text-brand-400 font-mono font-semibold">({{ record()!.confidenceScore }}/100)</span>
-        </h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <span>Trust Score Pillar Breakdown</span>
+            <span class="px-2 py-0.5 rounded bg-brand-500/10 text-brand-400 font-mono font-bold text-xs border border-brand-500/20">
+              {{ record()!.confidenceScore }}/100 Pts
+            </span>
+          </h2>
+          <span class="text-xs text-slate-400">Deterministic Rule Weights</span>
+        </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3.5">
           <div
             *ngFor="let factor of confidenceBreakdown()!.factors"
-            class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between"
+            class="p-4 rounded-xl bg-slate-900/70 border border-slate-800/80 flex flex-col justify-between hover:border-slate-700 transition-colors"
           >
             <div>
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-semibold text-white truncate" [title]="factor.factor">{{ factor.factor }}</span>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-white truncate" [title]="factor.factor">{{ factor.factor }}</span>
                 <span class="text-xs font-mono font-bold" [ngClass]="getFactorColor(factor.status)">
                   {{ factor.score }}/{{ factor.weight }}
                 </span>
               </div>
-              <p class="text-[11px] text-slate-400 leading-relaxed mt-2">{{ factor.explanation }}</p>
+
+              <!-- Mini Pillar Progress Bar -->
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mb-2.5">
+                <div
+                  class="h-full rounded-full"
+                  [ngClass]="factor.status === 'OPTIMAL' ? 'bg-emerald-500' : factor.status === 'ACCEPTABLE' ? 'bg-teal-500' : factor.status === 'NEEDS_ATTENTION' ? 'bg-amber-500' : 'bg-rose-500'"
+                  [style.width.%]="(factor.score / factor.weight) * 100"
+                ></div>
+              </div>
+
+              <p class="text-[11px] text-slate-400 leading-relaxed">{{ factor.explanation }}</p>
             </div>
-            <div class="mt-3 pt-2 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono">
+
+            <div class="mt-3 pt-2.5 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono">
               <span class="text-slate-500">Status</span>
-              <span [ngClass]="getFactorColor(factor.status)" class="font-bold">{{ factor.status }}</span>
+              <span [ngClass]="getFactorColor(factor.status)" class="font-bold uppercase">{{ factor.status }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Tab Navigation: Evidence Vault, Confidence Timeline, Clarification Requests -->
-      <div class="border-b border-slate-800 flex items-center gap-6 text-xs font-bold">
+      <!-- Tab Navigation: Segmented Pill Navigation -->
+      <div class="flex items-center gap-2 p-1 rounded-xl bg-slate-900/80 border border-slate-800 w-fit">
         <button
           (click)="activeTab = 'evidence'"
-          class="pb-3 border-b-2 transition-colors flex items-center gap-2"
-          [ngClass]="activeTab === 'evidence' ? 'border-brand-500 text-brand-400' : 'border-transparent text-slate-400 hover:text-white'"
+          class="px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2"
+          [ngClass]="activeTab === 'evidence' ? 'bg-brand-600 text-white shadow' : 'text-slate-400 hover:text-white'"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
           </svg>
-          Evidence Vault ({{ evidenceItems().length }})
+          Evidence Vault
+          <span class="px-1.5 py-0.2 rounded-full text-[10px]" [ngClass]="activeTab === 'evidence' ? 'bg-brand-700 text-white' : 'bg-slate-800 text-slate-300'">
+            {{ evidenceItems().length }}
+          </span>
         </button>
 
         <button
           (click)="activeTab = 'timeline'"
-          class="pb-3 border-b-2 transition-colors flex items-center gap-2"
-          [ngClass]="activeTab === 'timeline' ? 'border-brand-500 text-brand-400' : 'border-transparent text-slate-400 hover:text-white'"
+          class="px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2"
+          [ngClass]="activeTab === 'timeline' ? 'bg-brand-600 text-white shadow' : 'text-slate-400 hover:text-white'"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Verification Timeline ({{ timelineEvents().length }})
+          Verification Timeline
+          <span class="px-1.5 py-0.2 rounded-full text-[10px]" [ngClass]="activeTab === 'timeline' ? 'bg-brand-700 text-white' : 'bg-slate-800 text-slate-300'">
+            {{ timelineEvents().length }}
+          </span>
         </button>
 
         <button
           (click)="activeTab = 'clarifications'"
-          class="pb-3 border-b-2 transition-colors flex items-center gap-2"
-          [ngClass]="activeTab === 'clarifications' ? 'border-brand-500 text-brand-400' : 'border-transparent text-slate-400 hover:text-white'"
+          class="px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2"
+          [ngClass]="activeTab === 'clarifications' ? 'bg-brand-600 text-white shadow' : 'text-slate-400 hover:text-white'"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
-          Clarification Requests ({{ clarifications().length }})
+          Clarifications
+          <span class="px-1.5 py-0.2 rounded-full text-[10px]" [ngClass]="activeTab === 'clarifications' ? 'bg-brand-700 text-white' : 'bg-slate-800 text-slate-300'">
+            {{ clarifications().length }}
+          </span>
         </button>
       </div>
 
@@ -237,48 +337,87 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
         <div *ngIf="evidenceItems().length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div
             *ngFor="let item of evidenceItems()"
-            class="glass-panel p-5 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition-colors flex flex-col justify-between"
+            class="glass-panel p-5 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition-all flex flex-col justify-between"
           >
             <div>
-              <div class="flex items-start justify-between gap-3 mb-2">
-                <div>
-                  <span class="text-[10px] font-mono font-bold text-brand-400 uppercase tracking-wider block">
-                    {{ item.documentType.replace('_', ' ') }}
-                  </span>
-                  <h3 class="text-sm font-bold text-white mt-0.5">{{ item.title }}</h3>
+              <div class="flex items-start justify-between gap-3 mb-2.5">
+                <div class="flex items-start gap-2.5 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 shrink-0 mt-0.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div class="truncate">
+                    <span class="text-[10px] font-mono font-bold text-brand-400 uppercase tracking-wider block">
+                      {{ item.documentType.replace('_', ' ') }}
+                    </span>
+                    <h3 class="text-sm font-bold text-white mt-0.5 truncate">{{ item.title }}</h3>
+                  </div>
                 </div>
                 <span
-                  class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase"
+                  class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase shrink-0"
                   [ngClass]="getReviewStatusClass(item.reviewStatus)"
                 >
                   {{ item.reviewStatus }}
                 </span>
               </div>
 
-              <div class="text-[11px] text-slate-400 space-y-1 mb-3">
-                <div>File: <span class="font-mono text-slate-300">{{ item.originalFilename }}</span> ({{ formatFileSize(item.fileSize) }})</div>
-                <div>Submitted by: <span class="text-slate-300">{{ item.submittedByName }}</span> on {{ item.submittedAt | date:'mediumDate' }}</div>
-                <div *ngIf="item.reviewerComments" class="mt-2 p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 italic">
+              <div class="text-[11px] text-slate-400 space-y-1 mb-3 bg-slate-900/40 p-3 rounded-xl border border-slate-800/50">
+                <div class="flex items-center justify-between">
+                  <span>File:</span>
+                  <span class="font-mono text-slate-300 truncate max-w-[200px]">{{ item.originalFilename }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Size:</span>
+                  <span class="text-slate-300 font-mono">{{ formatFileSize(item.fileSize) }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Submitted by:</span>
+                  <span class="text-slate-300">{{ item.submittedByName }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Date:</span>
+                  <span class="text-slate-300">{{ item.submittedAt | date:'mediumDate' }}</span>
+                </div>
+                <div *ngIf="item.reviewerComments" class="mt-2 pt-2 border-t border-slate-800 text-slate-300 italic">
                   Reviewer: "{{ item.reviewerComments }}"
                 </div>
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-3 border-t border-slate-800/60">
-              <button
-                (click)="downloadEvidence(item)"
-                class="text-xs text-brand-400 hover:text-brand-300 font-semibold flex items-center gap-1"
-              >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Secure Download
-              </button>
+            <!-- Evidence Card Actions -->
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800/60 gap-2">
+              <div class="flex items-center gap-2">
+                <!-- Preview / View PDF button -->
+                <button
+                  (click)="previewEvidence(item)"
+                  class="px-2.5 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 text-xs font-semibold border border-brand-500/30 flex items-center gap-1.5 transition-colors"
+                  title="View document in secure PDF viewer"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Preview Document
+                </button>
+
+                <!-- Download button -->
+                <button
+                  (click)="downloadEvidence(item)"
+                  class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700/80 flex items-center gap-1.5 transition-colors"
+                  title="Download authentic binary file"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download
+                </button>
+              </div>
 
               <button
                 *ngIf="auth.isAdmin()"
                 (click)="openReviewEvidenceModal(item)"
-                class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700"
+                class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition-colors"
               >
                 Review Item
               </button>
@@ -583,6 +722,7 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
               <label class="block text-xs font-semibold text-slate-300 mb-1">Final Decision *</label>
               <select
                 [(ngModel)]="decisionStatus"
+                (ngModelChange)="onDecisionStatusChange($event)"
                 name="decisionStatus"
                 class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500 font-bold"
               >
@@ -590,6 +730,20 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
                 <option value="ACTION_REQUIRED">ACTION REQUIRED (Pending Evidence)</option>
                 <option value="REJECTED">REJECTED (Failed Verification)</option>
                 <option value="IN_REVIEW">IN REVIEW (Under Ongoing Audit)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Workforce Background Screening Status *</label>
+              <select
+                [(ngModel)]="decisionBgStatus"
+                name="decisionBgStatus"
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500 font-semibold"
+              >
+                <option value="PASSED">PASSED (Screening Cleared & Verified)</option>
+                <option value="IN_PROGRESS">IN_PROGRESS (Screening Under Review)</option>
+                <option value="FLAGGED">FLAGGED (Anomaly / Discrepancy Found)</option>
+                <option value="NOT_STARTED">NOT_STARTED (Pending Initiation)</option>
               </select>
             </div>
 
@@ -645,6 +799,13 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           </form>
         </div>
       </div>
+
+      <!-- Secure PDF Document Viewer Modal -->
+      <app-pdf-viewer-modal
+        [isOpen]="showPdfModal()"
+        [item]="previewItem"
+        (close)="closePdfModal()"
+      ></app-pdf-viewer-modal>
     </div>
   `
 })
@@ -662,6 +823,20 @@ export class RecordDetailComponent implements OnInit {
   timelineEvents = signal<VerificationEvent[]>([]);
   clarifications = signal<ClarificationRequest[]>([]);
   confidenceBreakdown = signal<ConfidenceBreakdown | null>(null);
+
+  // PDF Preview State
+  showPdfModal = signal<boolean>(false);
+  previewItem: EvidenceItem | null = null;
+
+  previewEvidence(item: EvidenceItem): void {
+    this.previewItem = item;
+    this.showPdfModal.set(true);
+  }
+
+  closePdfModal(): void {
+    this.showPdfModal.set(false);
+    this.previewItem = null;
+  }
 
   activeTab: 'evidence' | 'timeline' | 'clarifications' = 'evidence';
 
@@ -692,9 +867,29 @@ export class RecordDetailComponent implements OnInit {
   // Decision modal state
   showDecisionModal = signal<boolean>(false);
   decisionStatus: 'VERIFIED' | 'ACTION_REQUIRED' | 'REJECTED' | 'IN_REVIEW' = 'VERIFIED';
+  decisionBgStatus: 'NOT_STARTED' | 'IN_PROGRESS' | 'PASSED' | 'FLAGGED' = 'PASSED';
   decisionReason = '';
   decisionPublicNotes = '';
   decisionInternalNotes = '';
+
+  onBackgroundStatusChange(event: any) {
+    const newStatus = event.target.value;
+    const rec = this.record();
+    if (!rec) return;
+
+    this.recordService.updateRecord(rec.id, {
+      backgroundCheckStatus: newStatus,
+      backgroundCheckDate: newStatus === 'PASSED' ? new Date().toISOString().substring(0, 10) : undefined
+    }).subscribe({
+      next: (res: any) => {
+        this.toast.success(`Background screening updated to ${newStatus}`);
+        this.loadAll();
+      },
+      error: (err: any) => {
+        this.toast.error(err.error?.error || 'Failed to update background status');
+      }
+    });
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -891,8 +1086,44 @@ export class RecordDetailComponent implements OnInit {
   }
 
   // Decision actions
-  openDecisionModal() { this.showDecisionModal.set(true); }
+  openDecisionModal() {
+    this.decisionStatus = (this.record()?.verificationStatus as any) || 'VERIFIED';
+    this.decisionBgStatus = this.record()?.backgroundCheckStatus === 'IN_PROGRESS' || !this.record()?.backgroundCheckStatus
+      ? 'PASSED'
+      : this.record()!.backgroundCheckStatus;
+    this.decisionPublicNotes = this.record()?.publicReviewerNotes || '';
+    this.decisionInternalNotes = this.record()?.internalAssessmentNotes || '';
+    this.showDecisionModal.set(true);
+  }
   closeDecisionModal() { this.showDecisionModal.set(false); }
+
+  onDecisionStatusChange(newStatus: 'VERIFIED' | 'ACTION_REQUIRED' | 'REJECTED' | 'IN_REVIEW') {
+    if (newStatus === 'VERIFIED') {
+      this.decisionBgStatus = 'PASSED';
+    } else if (newStatus === 'REJECTED') {
+      this.decisionBgStatus = 'FLAGGED';
+    }
+  }
+
+  toggleQuickBackgroundStatus() {
+    const cur = this.record()?.backgroundCheckStatus;
+    const nextStatus = cur === 'PASSED' ? 'IN_PROGRESS' : 'PASSED';
+    const nextDate = nextStatus === 'PASSED' ? new Date().toISOString().substring(0, 10) : undefined;
+
+    this.recordService.updateRecord(this.recordId, {
+      backgroundCheckStatus: nextStatus,
+      backgroundCheckDate: nextDate
+    }).subscribe({
+      next: () => {
+        this.toast.success(`Background screening updated to ${nextStatus}!`);
+        this.loadAll();
+      },
+      error: err => {
+        this.toast.error(err.error?.error || 'Failed to update background screening.');
+      }
+    });
+  }
+
   onDecisionSubmit() {
     if (!this.decisionReason) {
       this.toast.error('Audit justification reason is required.');
@@ -900,6 +1131,7 @@ export class RecordDetailComponent implements OnInit {
     }
     this.recordService.recordDecision(this.recordId, {
       decision: this.decisionStatus,
+      backgroundCheckStatus: this.decisionBgStatus,
       reason: this.decisionReason,
       publicNotes: this.decisionPublicNotes,
       internalNotes: this.decisionInternalNotes

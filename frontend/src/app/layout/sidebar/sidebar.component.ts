@@ -10,18 +10,17 @@ import { AuthService } from '../../core/auth/auth.service';
   template: `
     <aside class="w-64 bg-slate-900/90 border-r border-slate-800 flex flex-col h-screen fixed left-0 top-0 z-40 backdrop-blur-xl">
       <!-- Brand Logo & Platform Title -->
-      <div class="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80 bg-slate-900/40">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-md shadow-brand-500/20 text-white font-black text-lg tracking-wider">
-          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
+      <div class="h-16 px-5 flex items-center gap-3 border-b border-slate-800/80 bg-slate-900/40">
+        <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-brand-500/25 border border-brand-500/30 flex-shrink-0 bg-slate-950 flex items-center justify-center relative group">
+          <img src="/assets/logo.png" alt="MPloyChek" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-xl pointer-events-none"></div>
         </div>
-        <div>
+        <div class="min-w-0">
           <span class="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
             MPloyChek
-            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-300 font-semibold border border-brand-500/30">XML</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-brand-500/20 text-brand-300 font-bold border border-brand-500/30">XML</span>
           </span>
-          <p class="text-[10px] text-slate-400 font-medium tracking-wide">Workforce Trust Platform</p>
+          <p class="text-[10px] text-slate-400 font-medium tracking-wide truncate">Workforce Trust Platform</p>
         </div>
       </div>
 

@@ -31,14 +31,18 @@ export class XmlStorageEngine {
     this.filePath = config.xmlDataFile;
     this.backupDir = config.backupDir;
 
-    // Secure XML Parser options - Prevent XXE, entity expansion, attribute injection
+    // Secure XML Parser options - Decode standard entities (&amp; -> &) with generous expansion ceiling
     this.xmlParser = new XMLParser({
       ignoreAttributes: false,
       attributeNamePrefix: '@_',
       allowBooleanAttributes: true,
-      parseTagValue: false, // Keep raw strings to maintain strict typing in our schema normalizers
+      parseTagValue: false,
       trimValues: true,
-      processEntities: false,
+      processEntities: {
+        enabled: true,
+        maxTotalExpansions: 1000000,
+        maxExpandedLength: 50000000
+      },
       stopNodes: []
     });
 
@@ -147,7 +151,7 @@ export class XmlStorageEngine {
     this.lastHealthCheck = {
       status: 'HEALTHY',
       fileExists: true,
-      filePath: this.filePath,
+      filePath: 'backend/data/mploychek.xml',
       fileSizeBytes: stats.size,
       readDurationMs: Math.round(readDuration * 100) / 100,
       parseDurationMs: Math.round(parseDuration * 100) / 100,
@@ -222,8 +226,31 @@ export class XmlStorageEngine {
     fs.fsyncSync(fd);
     fs.closeSync(fd);
 
-    // 3. Atomically rename temporary file over target file
-    fs.renameSync(tempFilePath, this.filePath);
+    // 3. Atomically rename temporary file over target file (with Windows retry & copy fallback)
+    let renamed = false;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        fs.renameSync(tempFilePath, this.filePath);
+        renamed = true;
+        break;
+      } catch (err: any) {
+        if (err.code === 'EPERM' || err.code === 'EBUSY') {
+          const start = Date.now();
+          while (Date.now() - start < 25) { /* micro-sleep */ }
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    if (!renamed) {
+      try {
+        fs.copyFileSync(tempFilePath, this.filePath);
+        try { fs.unlinkSync(tempFilePath); } catch { }
+      } catch (fallbackErr) {
+        throw fallbackErr;
+      }
+    }
   }
 
   private pruneBackups(): void {
@@ -247,6 +274,15 @@ export class XmlStorageEngine {
     }
   }
 
+  private cleanText(val: any): string {
+    if (val === undefined || val === null) return '';
+    let str = String(val);
+    while (str.includes('&amp;')) {
+      str = str.replace(/&amp;/g, '&');
+    }
+    return str.trim();
+  }
+
   /**
    * Helper to ensure XML lists are always converted to arrays even when single element or empty
    */
@@ -262,9 +298,9 @@ export class XmlStorageEngine {
   private normalizeDocument(root: any): MploychekDataSchema {
     return {
       organizations: this.toArray<any>(root.organizations?.organization).map(org => ({
-        id: String(org.id || ''),
-        name: String(org.name || ''),
-        domain: String(org.domain || ''),
+        id: this.cleanText(org.id),
+        name: this.cleanText(org.name),
+        domain: this.cleanText(org.domain),
         tier: (org.tier || 'STANDARD') as any,
         verificationPolicy: (org.verificationPolicy || 'STANDARD') as any,
         createdAt: String(org.createdAt || new Date().toISOString()),
@@ -312,20 +348,20 @@ export class XmlStorageEngine {
         updatedAt: String(r.updatedAt || new Date().toISOString())
       })),
       evidenceItems: this.toArray<any>(root.evidenceItems?.evidence).map(e => ({
-        id: String(e.id || ''),
-        recordId: String(e.recordId || ''),
-        organizationId: String(e.organizationId || ''),
+        id: this.cleanText(e.id),
+        recordId: this.cleanText(e.recordId),
+        organizationId: this.cleanText(e.organizationId),
         documentType: (e.documentType || 'OTHER') as any,
-        title: String(e.title || ''),
-        filename: String(e.filename || ''),
-        originalFilename: String(e.originalFilename || ''),
+        title: this.cleanText(e.title),
+        filename: this.cleanText(e.filename),
+        originalFilename: this.cleanText(e.originalFilename),
         fileSize: Number(e.fileSize || 0),
         mimeType: String(e.mimeType || 'application/octet-stream'),
         storagePath: String(e.storagePath || ''),
         reviewStatus: (e.reviewStatus || 'PENDING') as any,
-        reviewerId: e.reviewerId ? String(e.reviewerId) : undefined,
-        reviewerName: e.reviewerName ? String(e.reviewerName) : undefined,
-        reviewerComments: e.reviewerComments ? String(e.reviewerComments) : undefined,
+        reviewerId: e.reviewerId ? this.cleanText(e.reviewerId) : undefined,
+        reviewerName: e.reviewerName ? this.cleanText(e.reviewerName) : undefined,
+        reviewerComments: e.reviewerComments ? this.cleanText(e.reviewerComments) : undefined,
         submittedBy: String(e.submittedBy || ''),
         submittedByName: String(e.submittedByName || ''),
         submittedAt: String(e.submittedAt || new Date().toISOString()),

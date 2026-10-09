@@ -13,6 +13,7 @@ export interface RecordQueryParams {
   limit?: number;
   userRole?: 'ADMIN' | 'USER';
   userId?: string;
+  onlyMine?: boolean;
 }
 
 export interface PaginatedResult<T> {
@@ -43,8 +44,8 @@ export class RecordRepository extends BaseXmlRepository<EmploymentRecord> {
       records = records.filter(r => r.organizationId === params.organizationId);
     }
 
-    // Role-based visibility: If general user, restrict to records created by them or assigned to them
-    if (params.userRole === 'USER' && params.userId) {
+    // Role-based visibility: Restrict to user's authored/assigned records only if explicitly requested
+    if (params.onlyMine && params.userId) {
       records = records.filter(r => r.createdBy === params.userId || r.assignedReviewerId === params.userId);
     }
 

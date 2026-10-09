@@ -11,6 +11,8 @@ router.post('/ping', telemetryController.ping);
 // Admin-only telemetry metrics
 router.get('/summary', authenticateToken, requireAdmin, telemetryController.getSummary);
 router.get('/requests', authenticateToken, requireAdmin, telemetryController.getRequests);
+router.post('/clear', authenticateToken, requireAdmin, telemetryController.clearRequests);
+router.delete('/requests', authenticateToken, requireAdmin, telemetryController.clearRequests);
 router.post('/delay', authenticateToken, requireAdmin, telemetryController.setSimulatedDelay);
 
 export default router;

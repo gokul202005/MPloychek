@@ -205,15 +205,31 @@ import { ComplianceDeadline } from '../../shared/models';
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Due Date *</label>
-              <input
-                type="date"
-                [(ngModel)]="newDeadline.dueDate"
-                name="dueDate"
-                required
-                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
-              />
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Due Date *</label>
+                <input
+                  type="date"
+                  [(ngModel)]="newDeadline.dueDate"
+                  name="dueDate"
+                  required
+                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Assigned Reviewer *</label>
+                <select
+                  [(ngModel)]="newDeadline.assignedReviewerId"
+                  (ngModelChange)="onReviewerChange($event)"
+                  name="assignedReviewerId"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500 cursor-pointer"
+                >
+                  <option value="usr-admin-01">Eleanor Vance (Admin)</option>
+                  <option value="usr-user-01">Marcus Chen (Talent Ops)</option>
+                  <option value="usr-user-02">Sarah Jenkins (Verification)</option>
+                </select>
+              </div>
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
@@ -251,9 +267,17 @@ export class DeadlineCenterComponent implements OnInit {
     title: '',
     category: 'VERIFICATION_RENEWAL',
     priority: 'HIGH',
+    assignedReviewerId: 'usr-admin-01',
+    assignedReviewerName: 'Eleanor Vance',
     dueDate: new Date(Date.now() + 14 * 86400000).toISOString().substring(0, 10),
     reminderDaysBefore: 7
   };
+
+  onReviewerChange(revId: string) {
+    if (revId === 'usr-admin-01') this.newDeadline.assignedReviewerName = 'Eleanor Vance';
+    else if (revId === 'usr-user-01') this.newDeadline.assignedReviewerName = 'Marcus Chen';
+    else if (revId === 'usr-user-02') this.newDeadline.assignedReviewerName = 'Sarah Jenkins';
+  }
 
   ngOnInit() {
     this.loadDeadlines();

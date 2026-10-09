@@ -23,4 +23,8 @@ export class TelemetryService {
   ping() {
     return this.api.post<{ message: string; timestamp: string }>('/telemetry/ping', {});
   }
+
+  clearRequests() {
+    return this.api.post<{ message: string }>('/telemetry/clear', {});
+  }
 }

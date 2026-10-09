@@ -18,7 +18,7 @@ export class RecordController {
   getRecords = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user!;
-      const { search, status, department, employmentType, sortBy, sortOrder, page, limit } = req.query;
+      const { search, status, department, employmentType, sortBy, sortOrder, page, limit, onlyMine } = req.query;
 
       const result = await this.recordService.getRecords(user, {
         search: search as string,
@@ -28,7 +28,8 @@ export class RecordController {
         sortBy: sortBy as any,
         sortOrder: sortOrder as any,
         page: page ? parseInt(page as string, 10) : 1,
-        limit: limit ? parseInt(limit as string, 10) : 10
+        limit: limit ? parseInt(limit as string, 10) : 10,
+        onlyMine: onlyMine === 'true'
       });
 
       res.json({
@@ -120,7 +121,8 @@ export class RecordController {
         validated.internalNotes,
         validated.followUpDeadline,
         user,
-        reqMeta
+        reqMeta,
+        validated.backgroundCheckStatus
       );
 
       res.json({

@@ -56,7 +56,8 @@ export const reviewRecordSchema = z.object({
   reason: z.string().min(3, 'A clear justification or reviewer comment is required'),
   publicNotes: z.string().optional(),
   internalNotes: z.string().optional(),
-  followUpDeadline: z.string().optional()
+  followUpDeadline: z.string().optional(),
+  backgroundCheckStatus: z.enum(['NOT_STARTED', 'IN_PROGRESS', 'PASSED', 'FLAGGED']).optional()
 });
 
 export const createEvidenceSchema = z.object({

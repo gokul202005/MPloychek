@@ -112,4 +112,8 @@ export class TelemetryService {
   public getRecentRequests(limit = 30): TelemetryRecord[] {
     return this.recentRequests.slice(0, limit);
   }
+
+  public clearRequests(): void {
+    this.recentRequests = [];
+  }
 }

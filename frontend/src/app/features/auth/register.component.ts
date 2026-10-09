@@ -14,9 +14,19 @@ import { ToastService } from '../../shared/components/toast/toast.service';
       <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="w-full max-w-lg relative z-10">
-        <div class="text-center mb-6">
+        <div class="text-center mb-6 flex flex-col items-center">
+          <div class="relative mb-3 group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-2xl blur-md opacity-35"></div>
+            <div class="relative w-16 h-16 rounded-2xl overflow-hidden border border-brand-400/40 shadow-xl bg-slate-900/90 p-0.5 flex items-center justify-center">
+              <img src="/assets/logo.png" alt="MPloyChek Logo" class="w-full h-full object-cover rounded-[14px]" />
+            </div>
+          </div>
           <h1 class="text-2xl font-black text-white tracking-tight">Create Workspace Account</h1>
-          <p class="text-xs text-slate-400 mt-1">Join Apex Global Solutions Workforce Trust Platform</p>
+          <p class="text-xs text-slate-400 mt-1 font-medium">Join MPloyChek Workforce Trust Platform</p>
+          <div class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-slate-800 text-[10px] text-slate-400 font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse"></span>
+            MPloyChek Enterprise Auth
+          </div>
         </div>
 
         <div class="glass-panel p-8 rounded-2xl shadow-2xl border border-slate-800/80">
@@ -40,7 +50,7 @@ import { ToastService } from '../../shared/components/toast/toast.service';
                 [(ngModel)]="email"
                 name="email"
                 required
-                placeholder="jordan@apexglobal.io"
+                placeholder="jordan@workforcetrust.io"
                 class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500"
               />
             </div>

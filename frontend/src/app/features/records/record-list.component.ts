@@ -24,15 +24,37 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           </p>
         </div>
 
-        <button
-          (click)="openCreateModal()"
-          class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2 self-start sm:self-auto"
-        >
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Initiate New Verification
-        </button>
+        <div class="flex items-center gap-2.5 self-start sm:self-auto">
+          <!-- Scope Toggle (All Records vs My Submissions) for Users -->
+          <div *ngIf="!auth.isAdmin()" class="flex items-center p-1 rounded-xl bg-slate-900/90 border border-slate-800">
+            <button
+              type="button"
+              (click)="setScope('all')"
+              [ngClass]="scope === 'all' ? 'bg-brand-600 text-white font-bold shadow-sm' : 'text-slate-400 hover:text-white'"
+              class="px-3 py-1.5 rounded-lg text-xs transition-colors"
+            >
+              All Workforce Records
+            </button>
+            <button
+              type="button"
+              (click)="setScope('mine')"
+              [ngClass]="scope === 'mine' ? 'bg-brand-600 text-white font-bold shadow-sm' : 'text-slate-400 hover:text-white'"
+              class="px-3 py-1.5 rounded-lg text-xs transition-colors"
+            >
+              My Submissions
+            </button>
+          </div>
+
+          <button
+            (click)="openCreateModal()"
+            class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Initiate New Verification
+          </button>
+        </div>
       </div>
 
       <!-- Filter & Search Toolbar -->
@@ -384,6 +406,7 @@ export class RecordListComponent implements OnInit {
   selectedStatus = '';
   selectedDepartment = '';
   sortBy = 'createdAt';
+  scope: 'all' | 'mine' = 'all';
   currentPage = 1;
   totalRecords = 0;
   totalPages = 1;
@@ -407,8 +430,17 @@ export class RecordListComponent implements OnInit {
       if (params['new'] === 'true') {
         this.openCreateModal();
       }
+      if (params['my'] === 'true' || params['scope'] === 'mine') {
+        this.scope = 'mine';
+      }
       this.loadRecords();
     });
+  }
+
+  setScope(newScope: 'all' | 'mine') {
+    this.scope = newScope;
+    this.currentPage = 1;
+    this.loadRecords();
   }
 
   loadRecords() {
@@ -421,7 +453,8 @@ export class RecordListComponent implements OnInit {
         sortBy: this.sortBy,
         sortOrder: 'desc',
         page: this.currentPage,
-        limit: 10
+        limit: 10,
+        onlyMine: this.scope === 'mine'
       })
       .subscribe({
         next: res => {

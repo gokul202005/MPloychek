@@ -85,22 +85,53 @@ async function seed() {
     }
   ];
 
-  // Helper to create sample file on disk
-  const createSampleFile = (filename: string, content: string): string => {
-    const fullPath = path.join(config.uploadsDir, filename);
-    fs.writeFileSync(fullPath, content, 'utf8');
-    return fullPath;
-  };
+  // Import PDF generator
+  const { generateSimplePdf } = await import('../utils/pdfGenerator');
 
-  const sampleFile1 = 'vault_sample_alex_morgan_offer.txt';
-  const sampleFile2 = 'vault_sample_alex_morgan_degree.txt';
-  const sampleFile3 = 'vault_sample_brian_thorne_w2.txt';
-  const sampleFile4 = 'vault_sample_priya_patel_portfolio.txt';
+  const sampleFile1 = 'vault_sample_alex_morgan_offer.pdf';
+  const sampleFile2 = 'vault_sample_alex_morgan_degree.pdf';
+  const sampleFile3 = 'vault_sample_brian_thorne_w2.pdf';
+  const sampleFile4 = 'vault_sample_priya_patel_portfolio.pdf';
 
-  createSampleFile(sampleFile1, 'OFFER LETTER - Apex Global Solutions Inc. - Employee Alex Morgan - Position: Principal Systems Architect - Date: 2024-03-01');
-  createSampleFile(sampleFile2, 'DEGREE VERIFICATION - Stanford University - Bachelor of Science in Computer Science - Alex Morgan - Conferred: 2018-06-15');
-  createSampleFile(sampleFile3, 'FORM W-2 Wage and Tax Statement 2024 - Employer: Apex Global Solutions - Employee: Brian Thorne');
-  createSampleFile(sampleFile4, 'WORK VERIFICATION CONTRACT - Priya Patel - UX Design Consultancy - Valid 2025-01-01 to 2026-12-31');
+  const pdf1 = generateSimplePdf('OFFER OF EMPLOYMENT - EXECUTIVE AGREEMENT', [
+    'Employer: Apex Global Solutions Inc.',
+    'Candidate: Alex Morgan',
+    'Position: Principal Systems Architect',
+    'Department: Engineering & Systems Architecture',
+    'Compensation Tier: Executive Fellow Level L7',
+    'Start Date: March 01, 2024',
+    'Status: Fully Executed and Countersigned by Human Resources'
+  ]);
+  fs.writeFileSync(path.join(config.uploadsDir, sampleFile1), pdf1);
+
+  const pdf2 = generateSimplePdf('STANFORD UNIVERSITY - DEGREE VERIFICATION', [
+    'Official Educational Attestation Record',
+    'Student: Alex Morgan',
+    'Degree: Bachelor of Science in Computer Science',
+    'Conferral Date: June 15, 2018',
+    'Honors: With Distinction',
+    'Electronic Clearinghouse Verification Stamp: # NSC-99482-VERIFIED'
+  ]);
+  fs.writeFileSync(path.join(config.uploadsDir, sampleFile2), pdf2);
+
+  const pdf3 = generateSimplePdf('INTERNAL REVENUE SERVICE - FORM W-2 WAGE SUMMARY', [
+    'Tax Year: 2024 Wage and Tax Statement',
+    'Employee: Brian Thorne (SSN: ***-**-4910)',
+    'Employer: Thorne Financial Consulting LLC',
+    'Federal Wages, Tips: $148,500.00',
+    'Federal Income Tax Withheld: $28,940.00',
+    'Note: Discrepancy under investigation regarding subsidiary EIN alignment.'
+  ]);
+  fs.writeFileSync(path.join(config.uploadsDir, sampleFile3), pdf3);
+
+  const pdf4 = generateSimplePdf('INDEPENDENT CONSULTING AGREEMENT & WORK STATEMENT', [
+    'Client: Apex Global Solutions Inc.',
+    'Consultant: Priya Patel (Lead UX Strategist)',
+    'Contract Term: January 01, 2025 to December 31, 2026',
+    'Scope: Design Systems, Accessibility Audits & Product Architecture',
+    'Status: Active Professional Engagement'
+  ]);
+  fs.writeFileSync(path.join(config.uploadsDir, sampleFile4), pdf4);
 
   const evidenceItems: EvidenceItem[] = [
     {

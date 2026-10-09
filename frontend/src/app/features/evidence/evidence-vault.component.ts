@@ -8,10 +8,13 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { EvidenceItem } from '../../shared/models';
 
+import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
+import { PdfViewerModalComponent } from '../../shared/components/pdf-viewer-modal/pdf-viewer-modal.component';
+
 @Component({
   selector: 'app-evidence-vault',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, PdfViewerModalComponent],
   template: `
     <div class="space-y-6 max-w-7xl mx-auto">
       <div>
@@ -78,26 +81,48 @@ import { EvidenceItem } from '../../shared/models';
             </div>
           </div>
 
-          <div class="pt-3 border-t border-slate-800/60 flex items-center justify-between">
+          <div class="pt-3 border-t border-slate-800/60 flex items-center justify-between gap-2">
             <a
               [routerLink]="['/records', item.recordId]"
-              class="text-xs text-brand-400 hover:text-brand-300 font-semibold"
+              class="text-xs text-brand-400 hover:text-brand-300 font-semibold truncate"
             >
-              View Record Vault &rarr;
+              View Record &rarr;
             </a>
 
-            <button
-              (click)="evidenceService.downloadEvidence(item.id, item.originalFilename)"
-              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download
-            </button>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button
+                (click)="previewEvidence(item)"
+                class="px-2.5 py-1 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 text-xs font-semibold border border-brand-500/30 transition-colors flex items-center gap-1"
+                title="View document in secure preview"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View
+              </button>
+
+              <button
+                (click)="evidenceService.downloadEvidence(item.id, item.originalFilename)"
+                class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1"
+                title="Download original document file"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Secure PDF Document Viewer Modal -->
+      <app-pdf-viewer-modal
+        [isOpen]="showPdfModal()"
+        [item]="previewItem"
+        (close)="closePdfModal()"
+      ></app-pdf-viewer-modal>
     </div>
   `
 })
@@ -108,6 +133,18 @@ export class EvidenceVaultComponent implements OnInit {
   toast = inject(ToastService);
 
   evidenceList = signal<EvidenceItem[]>([]);
+  showPdfModal = signal<boolean>(false);
+  previewItem: EvidenceItem | null = null;
+
+  previewEvidence(item: EvidenceItem): void {
+    this.previewItem = item;
+    this.showPdfModal.set(true);
+  }
+
+  closePdfModal(): void {
+    this.showPdfModal.set(false);
+    this.previewItem = null;
+  }
 
   ngOnInit() {
     this.recordService.getRecords({ limit: 100 }).subscribe({

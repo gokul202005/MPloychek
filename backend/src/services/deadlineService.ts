@@ -61,7 +61,10 @@ export class DeadlineService {
       dueDate: data.dueDate,
       status: 'ACTIVE',
       priority: data.priority,
-      assignedReviewerId: data.assignedReviewerId,
+      assignedReviewerId: data.assignedReviewerId || currentUser.id,
+      assignedReviewerName:
+        data.assignedReviewerName ||
+        (data.assignedReviewerId === 'usr-admin-01' ? 'Eleanor Vance' : currentUser.name),
       reminderDaysBefore: data.reminderDaysBefore || 7,
       createdAt: now,
       updatedAt: now

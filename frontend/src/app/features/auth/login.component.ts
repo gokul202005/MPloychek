@@ -17,16 +17,17 @@ import { ToastService } from '../../shared/components/toast/toast.service';
 
       <div class="w-full max-w-md relative z-10">
         <!-- Brand Header -->
-        <div class="text-center mb-8">
-          <div class="inline-flex w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 items-center justify-center shadow-xl shadow-brand-500/20 text-white mb-4">
-            <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+        <div class="text-center mb-8 flex flex-col items-center">
+          <div class="relative mb-3 group">
+            <div class="absolute -inset-1.5 bg-gradient-to-r from-brand-500 to-indigo-500 rounded-3xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
+            <div class="relative w-20 h-20 rounded-2xl overflow-hidden border border-brand-400/40 shadow-2xl bg-slate-900/90 p-1 flex items-center justify-center">
+              <img src="/assets/logo.png" alt="MPloyChek Logo" class="w-full h-full object-cover rounded-xl" />
+            </div>
           </div>
           <h1 class="text-2xl font-black text-white tracking-tight">MPloyChek</h1>
           <p class="text-xs text-slate-400 mt-1 font-medium">Workforce Trust & Verification Platform</p>
-          <div class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-[11px] text-slate-400 font-mono">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-400"></span>
+          <div class="inline-flex items-center gap-1.5 mt-2.5 px-3 py-0.5 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] text-slate-400 font-mono shadow-inner">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse"></span>
             Persistent XML Architecture
           </div>
         </div>

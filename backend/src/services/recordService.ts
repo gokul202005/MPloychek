@@ -4,6 +4,7 @@ import { EvidenceRepository } from '../repositories/xml/evidenceRepository';
 import { ClarificationRepository } from '../repositories/xml/clarificationRepository';
 import { TimelineRepository } from '../repositories/xml/timelineRepository';
 import { NotificationRepository } from '../repositories/xml/notificationRepository';
+import { DeadlineRepository } from '../repositories/xml/deadlineRepository';
 import { ConfidenceScoreService } from './confidenceScoreService';
 import { AuditService } from './auditService';
 import { EmploymentRecord, SafeEmploymentRecord, SafeUser, VerificationStatus } from '../types';
@@ -14,6 +15,7 @@ export class RecordService {
   private clarificationRepo: ClarificationRepository;
   private timelineRepo: TimelineRepository;
   private notificationRepo: NotificationRepository;
+  private deadlineRepo: DeadlineRepository;
   private confidenceService: ConfidenceScoreService;
   private auditService: AuditService;
 
@@ -23,6 +25,7 @@ export class RecordService {
     this.clarificationRepo = new ClarificationRepository();
     this.timelineRepo = new TimelineRepository();
     this.notificationRepo = new NotificationRepository();
+    this.deadlineRepo = new DeadlineRepository();
     this.confidenceService = new ConfidenceScoreService();
     this.auditService = new AuditService();
   }
@@ -58,10 +61,6 @@ export class RecordService {
 
     if (record.organizationId !== currentUser.organizationId) {
       throw new Error('Access denied: Record belongs to a different organization.');
-    }
-
-    if (currentUser.role === 'USER' && record.createdBy !== currentUser.id && record.assignedReviewerId !== currentUser.id) {
-      throw new Error('Access denied: You are not authorized to view this record.');
     }
 
     if (currentUser.role === 'USER') {
@@ -251,7 +250,8 @@ export class RecordService {
     internalNotes: string | undefined,
     followUpDeadline: string | undefined,
     currentUser: SafeUser,
-    reqMeta: { ip: string; userAgent: string; requestId: string }
+    reqMeta: { ip: string; userAgent: string; requestId: string },
+    backgroundCheckStatus?: 'NOT_STARTED' | 'IN_PROGRESS' | 'PASSED' | 'FLAGGED'
   ): Promise<EmploymentRecord> {
     if (currentUser.role !== 'ADMIN') {
       throw new Error('Access denied: Only Administrators can record verification decisions.');
@@ -264,8 +264,13 @@ export class RecordService {
     const oldScore = existing.confidenceScore;
     const now = new Date().toISOString();
 
+    // Auto-resolve background screening status to PASSED when verifying unless specified otherwise
+    const resolvedBgStatus = backgroundCheckStatus || (decision === 'VERIFIED' ? 'PASSED' : existing.backgroundCheckStatus);
+
     const updates: Partial<EmploymentRecord> = {
       verificationStatus: decision,
+      backgroundCheckStatus: resolvedBgStatus,
+      backgroundCheckDate: resolvedBgStatus === 'PASSED' ? (existing.backgroundCheckDate || now.split('T')[0]) : existing.backgroundCheckDate,
       assignedReviewerId: currentUser.id,
       assignedReviewerName: currentUser.name,
       publicReviewerNotes: publicNotes || existing.publicReviewerNotes,
@@ -333,6 +338,29 @@ export class RecordService {
       reason,
       metadata: { previousStatus, newStatus: decision }
     });
+
+    // Auto-resolve associated compliance deadlines and clarification requests upon approval
+    if (decision === 'VERIFIED') {
+      try {
+        const allDeadlines = await this.deadlineRepo.getByOrganizationId(updated.organizationId);
+        for (const dl of allDeadlines) {
+          if (dl.recordId === id && dl.status !== 'COMPLETED') {
+            await this.deadlineRepo.update(dl.id, { status: 'COMPLETED' });
+          }
+        }
+        const openClarifications = await this.clarificationRepo.getByRecordId(id);
+        for (const clar of openClarifications) {
+          if (clar.status !== 'RESOLVED') {
+            await this.clarificationRepo.update(clar.id, {
+              status: 'RESOLVED',
+              response: clar.response || 'Verified and approved by compliance officer.'
+            });
+          }
+        }
+      } catch {
+        // Non-blocking
+      }
+    }
 
     return updated;
   }

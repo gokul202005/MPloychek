@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { TelemetryService } from '../../core/services/telemetry.service';
@@ -17,10 +17,10 @@ import { ToastService } from '../../shared/components/toast/toast.service';
         <div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
           <span class="text-white font-semibold flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Apex Global Solutions
+            Workforce Trust Vault
           </span>
           <span class="text-slate-600">/</span>
-          <span class="text-slate-300">Workforce Trust Vault</span>
+          <span class="text-slate-300">Enterprise Registry</span>
         </div>
 
         <!-- Real XML Storage Status indicator -->
@@ -118,6 +118,7 @@ import { ToastService } from '../../shared/components/toast/toast.service';
 })
 export class HeaderComponent implements OnInit {
   auth = inject(AuthService);
+  router = inject(Router);
   notifService = inject(NotificationService);
   telemetryService = inject(TelemetryService);
   toast = inject(ToastService);
@@ -128,7 +129,21 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.notifService.fetchNotifications().subscribe();
+    this.restoreSavedDelay();
     this.checkHealth();
+  }
+
+  private restoreSavedDelay() {
+    const saved = localStorage.getItem('mploychek_simulated_delay');
+    if (saved !== null) {
+      const delay = parseInt(saved, 10);
+      if (!isNaN(delay)) {
+        this.currentDelay.set(delay);
+        this.telemetryService.setSimulatedDelay(delay).subscribe({
+          error: () => {}
+        });
+      }
+    }
   }
 
   checkHealth() {
@@ -136,7 +151,10 @@ export class HeaderComponent implements OnInit {
       next: res => {
         if (res.data) {
           this.xmlHealth.set(res.data.xmlStorageHealth.status);
-          this.currentDelay.set(res.data.simulatedDelayMs);
+          const saved = localStorage.getItem('mploychek_simulated_delay');
+          if (saved === null) {
+            this.currentDelay.set(res.data.simulatedDelayMs);
+          }
         }
       },
       error: () => {}
@@ -159,13 +177,36 @@ export class HeaderComponent implements OnInit {
     if (!notif.isRead) {
       this.notifService.markAsRead(notif.id).subscribe();
     }
+    this.showNotifications.set(false);
+
+    // Permission-aware and context-sensitive routing
+    if (notif.targetType === 'RECORD' && notif.targetId) {
+      this.router.navigate(['/records', notif.targetId]);
+    } else if (notif.targetType === 'DEADLINE' || notif.title?.toLowerCase().includes('deadline') || notif.title?.toLowerCase().includes('milestone')) {
+      this.router.navigate(['/compliance']);
+    } else if (notif.targetType === 'EVIDENCE') {
+      if (notif.targetId) {
+        this.router.navigate(['/records', notif.targetId]);
+      } else {
+        this.router.navigate(['/evidence']);
+      }
+    } else if (notif.targetType === 'CLARIFICATION' || notif.title?.toLowerCase().includes('clarification') || notif.title?.toLowerCase().includes('w-2')) {
+      if (notif.targetId) {
+        this.router.navigate(['/records', notif.targetId]);
+      } else {
+        this.router.navigate(['/compliance']);
+      }
+    } else {
+      this.router.navigate(['/records']);
+    }
   }
 
   onDelayChange(event: any) {
     const delay = parseInt(event.target.value, 10);
+    localStorage.setItem('mploychek_simulated_delay', String(delay));
+    this.currentDelay.set(delay);
     this.telemetryService.setSimulatedDelay(delay).subscribe({
       next: () => {
-        this.currentDelay.set(delay);
         this.toast.info(`Development delay configured to ${delay}ms`);
       }
     });

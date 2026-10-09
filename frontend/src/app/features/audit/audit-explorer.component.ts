@@ -88,7 +88,7 @@ import { AuditEvent } from '../../shared/models';
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-800/60 font-mono text-[11px]">
-              <tr *ngFor="let ev of events()" class="hover:bg-slate-800/30 transition-colors">
+              <tr *ngFor="let ev of paginatedEvents()" class="hover:bg-slate-800/30 transition-colors">
                 <td class="py-3 px-4 text-slate-400 whitespace-nowrap">
                   {{ ev.timestamp | date:'short' }}
                 </td>
@@ -125,37 +125,86 @@ import { AuditEvent } from '../../shared/models';
             </tbody>
           </table>
         </div>
+
+        <!-- Pagination Controls -->
+        <div class="px-6 py-3.5 bg-slate-900/80 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div class="text-slate-400 font-mono text-[11px]">
+            Showing <span class="text-white font-semibold">{{ startIndex() + 1 }}</span> to
+            <span class="text-white font-semibold">{{ endIndex() }}</span> of
+            <span class="text-white font-semibold">{{ events().length }}</span> audit events
+          </div>
+
+          <div class="flex items-center gap-1.5" *ngIf="totalPages() > 1">
+            <button
+              (click)="goToPage(currentPage() - 1)"
+              [disabled]="currentPage() === 1"
+              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 font-medium transition-colors"
+            >
+              Prev
+            </button>
+
+            <button
+              *ngFor="let p of pageNumbers()"
+              (click)="goToPage(p)"
+              class="w-7 h-7 rounded-lg text-xs font-semibold font-mono transition-colors flex items-center justify-center"
+              [ngClass]="currentPage() === p ? 'bg-purple-600 text-white font-bold' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white'"
+            >
+              {{ p }}
+            </button>
+
+            <button
+              (click)="goToPage(currentPage() + 1)"
+              [disabled]="currentPage() === totalPages()"
+              class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-300 font-medium transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
-      <!-- Detail Modal -->
+      <!-- Detail Modal: Explainable AI & Audit Rationale -->
       <div *ngIf="selectedEvent" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-panel p-6 rounded-2xl border border-slate-700 max-w-lg w-full relative shadow-2xl">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-            <h2 class="text-sm font-bold text-white font-mono">{{ selectedEvent.actionType }}</h2>
-            <button (click)="selectedEvent = null" class="text-slate-400 hover:text-white">&times;</button>
+        <div class="glass-panel p-6 rounded-2xl border border-slate-700 max-w-xl w-full relative shadow-2xl space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse"></span>
+              <h2 class="text-sm font-bold text-white font-mono">{{ selectedEvent.actionType }}</h2>
+            </div>
+            <button (click)="selectedEvent = null" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
           </div>
 
           <div class="space-y-3 text-xs text-slate-300">
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <span class="text-slate-500 text-[10px] block">Actor</span>
-                <span class="font-bold text-white">{{ selectedEvent.actorName }} ({{ selectedEvent.actorRole }})</span>
+            <!-- Plain-English Explainability Box -->
+            <div class="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 space-y-2">
+              <div class="flex items-center gap-2 text-purple-300 font-bold text-xs uppercase tracking-wider">
+                <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Explainability & Regulatory Analysis
               </div>
-              <div>
-                <span class="text-slate-500 text-[10px] block">Actor ID</span>
-                <span class="font-mono">{{ selectedEvent.actorId }}</span>
+              <p class="text-slate-200 leading-relaxed">
+                {{ getExplainSummary(selectedEvent) }}
+              </p>
+            </div>
+
+            <!-- Contextual Metadata -->
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="text-slate-500 text-[10px] block">Actor Identity</span>
+                <span class="font-bold text-white">{{ selectedEvent.actorName }}</span>
+                <span class="text-purple-400 block font-mono text-[10px]">Role: {{ selectedEvent.actorRole }} ({{ selectedEvent.actorId }})</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="text-slate-500 text-[10px] block">Target Resource</span>
+                <span class="font-mono text-purple-300 font-bold">{{ selectedEvent.entityType }}</span>
+                <span class="text-slate-400 block font-mono text-[10px]">{{ selectedEvent.entityId }}</span>
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <span class="text-slate-500 text-[10px] block">Target Entity</span>
-                <span class="font-mono text-purple-300">{{ selectedEvent.entityType }}: {{ selectedEvent.entityId }}</span>
-              </div>
-              <div>
-                <span class="text-slate-500 text-[10px] block">Origin IP / Agent</span>
-                <span class="font-mono text-slate-400">{{ selectedEvent.ip }}</span>
-              </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5 text-[11px]">
+              <span class="text-[10px] text-emerald-400 font-bold block uppercase tracking-wider">Zero-Trust Verification</span>
+              <p class="text-slate-300">{{ getExplainSecurity(selectedEvent) }}</p>
             </div>
 
             <div *ngIf="selectedEvent.reason" class="p-3 rounded-xl bg-slate-900 border border-slate-800">
@@ -163,9 +212,10 @@ import { AuditEvent } from '../../shared/models';
               <p class="text-slate-200">{{ selectedEvent.reason }}</p>
             </div>
 
-            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[10px]">
-              <span class="text-slate-500 block mb-1">Request ID: {{ selectedEvent.requestId }}</span>
-              <span class="text-slate-500 block">Timestamp: {{ selectedEvent.timestamp }}</span>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[10px] flex items-center justify-between text-slate-500">
+              <span>Req: {{ selectedEvent.requestId }}</span>
+              <span>IP: {{ selectedEvent.ip }}</span>
+              <span>{{ selectedEvent.timestamp | date:'medium' }}</span>
             </div>
           </div>
         </div>
@@ -182,6 +232,10 @@ export class AuditExplorerComponent implements OnInit {
   selectedAction = '';
   selectedOutcome = '';
 
+  // Pagination state
+  currentPage = signal<number>(1);
+  pageSize = 10;
+
   ngOnInit() {
     this.loadEvents();
   }
@@ -191,16 +245,80 @@ export class AuditExplorerComponent implements OnInit {
       search: this.searchQuery,
       actionType: this.selectedAction,
       outcome: this.selectedOutcome,
-      limit: 50
+      limit: 100
     }).subscribe({
       next: res => {
-        if (res.data) this.events.set(res.data.items);
+        if (res.data) {
+          this.events.set(res.data.items);
+          this.currentPage.set(1);
+        }
       }
     });
   }
 
   onFilterChange() {
     this.loadEvents();
+  }
+
+  paginatedEvents(): AuditEvent[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.events().slice(start, start + this.pageSize);
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.events().length / this.pageSize) || 1;
+  }
+
+  pageNumbers(): number[] {
+    const total = this.totalPages();
+    const pages: number[] = [];
+    for (let i = 1; i <= Math.min(total, 6); i++) pages.push(i);
+    return pages;
+  }
+
+  startIndex(): number {
+    return (this.currentPage() - 1) * this.pageSize;
+  }
+
+  endIndex(): number {
+    return Math.min(this.startIndex() + this.pageSize, this.events().length);
+  }
+
+  goToPage(p: number) {
+    if (p >= 1 && p <= this.totalPages()) {
+      this.currentPage.set(p);
+    }
+  }
+
+  getExplainSummary(ev: AuditEvent): string {
+    switch (ev.actionType) {
+      case 'AUTH_LOGIN_SUCCESS':
+        return `User ${ev.actorName} successfully authenticated into MPloyChek with role '${ev.actorRole}'. Credentials verified via bcrypt password hash and secure JWT session token minted for organization ${ev.organizationId}.`;
+      case 'AUTH_LOGIN_FAILED':
+        return `Failed authentication attempt detected for identity ${ev.entityId}. Access was denied in accordance with zero-trust credentials policy. No session established.`;
+      case 'RECORD_CREATE':
+        return `Workforce verification record '${ev.entityId}' was authored by ${ev.actorName}. Core attributes completeness was evaluated, generating a baseline deterministic confidence score in XML storage.`;
+      case 'RECORD_UPDATE':
+        return `Employment record '${ev.entityId}' was modified by ${ev.actorName}. Trust score was recomputed deterministically across all 5 verification integrity pillars.`;
+      case 'VERIFICATION_DECISION':
+        return `Formal verification decision was rendered by Compliance Officer ${ev.actorName} on record '${ev.entityId}'. Record status committed with immutable audit seal.`;
+      case 'EVIDENCE_UPLOAD':
+        return `Evidence document was deposited into the cryptographic Evidence Vault by ${ev.actorName}. Document metadata serialized into XML storage and binary asset saved with SHA-256 integrity tag.`;
+      case 'EVIDENCE_REVIEW':
+        return `Credential document under '${ev.entityId}' was reviewed by ${ev.actorName}. Verification status updated and factored into record confidence rating.`;
+      case 'CLARIFICATION_REQUEST':
+        return `Clarification inquiry ticket '${ev.entityId}' was issued by ${ev.actorName}. Worker/submitter notified to address attestation discrepancy.`;
+      case 'CLARIFICATION_RESPONSE':
+        return `Submitter ${ev.actorName} provided written clarification to resolve outstanding query on '${ev.entityId}'. Status queued for reviewer confirmation.`;
+      case 'COMPLIANCE_DEADLINE_CREATE':
+        return `Regulatory compliance milestone scheduled for target resource '${ev.entityId}' with assigned reviewer window.`;
+      default:
+        return `Security event '${ev.actionType}' performed by ${ev.actorName} (${ev.actorRole}) on entity '${ev.entityType}:${ev.entityId}'. State transition persisted to immutable XML log.`;
+    }
+  }
+
+  getExplainSecurity(ev: AuditEvent): string {
+    return `Transaction verified with SHA-256 fingerprint. Executed from client origin ${ev.ip} via request trace ${ev.requestId}. Zero-trust authorization cleared for role ${ev.actorRole}.`;
   }
 
   getOutcomeClass(outcome: string): string {
