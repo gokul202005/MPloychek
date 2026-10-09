@@ -321,8 +321,20 @@ export class TelemetryDashboardComponent implements OnInit, OnDestroy {
         this.recentRequests.set([]);
         this.currentPage.set(1);
         this.isClearing.set(false);
+        const curr = this.summary();
+        if (curr) {
+          this.summary.set({
+            ...curr,
+            totalRequests: 0,
+            totalSuccess: 0,
+            totalClientErrors: 0,
+            totalServerErrors: 0,
+            averageResponseTimeMs: 0,
+            inFlightRequests: 0
+          });
+        }
         this.loadTelemetry();
-        this.toast.success('Inbound request telemetry stream cleared.');
+        this.toast.success('Inbound request telemetry stream and metrics cleared.');
       },
       error: err => {
         this.isClearing.set(false);
