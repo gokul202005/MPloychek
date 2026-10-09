@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { AuthService } from '../../core/auth/auth.service';
-import { DashboardMetrics } from '../../shared/models';
+import { DashboardMetrics, EmploymentRecord } from '../../shared/models';
 import { KpiCardComponent } from '../../shared/components/kpi-card/kpi-card.component';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
 import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gauge/confidence-gauge.component';
@@ -13,11 +13,11 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
   standalone: true,
   imports: [CommonModule, RouterModule, KpiCardComponent, StatusBadgeComponent, ConfidenceGaugeComponent],
   template: `
-    <div class="space-y-8 max-w-7xl mx-auto">
+    <div class="space-y-8 max-w-7xl mx-auto relative">
       <!-- Welcome Header -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div class="flex items-center gap-2 mb-1">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
             <h1 class="text-2xl font-black text-white tracking-tight">
               {{ auth.isAdmin() ? 'Executive Trust & Verification Overview' : 'My Verification Workspace' }}
             </h1>
@@ -33,7 +33,30 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           </p>
         </div>
 
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <!-- Interactive Operator Profile Chip with Hover Option -->
+          <div
+            class="relative px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-brand-500/50 flex items-center gap-2.5 cursor-pointer transition-all shadow-sm group"
+            (mouseenter)="onOperatorMouseEnter($event)"
+            (mouseleave)="onOperatorMouseLeave()"
+          >
+            <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow-md border border-brand-400/30 group-hover:scale-105 transition-transform">
+              {{ (auth.currentUser()?.name || 'U')[0] }}
+            </div>
+            <div class="text-left pr-1">
+              <span class="text-xs font-semibold text-white group-hover:text-brand-300 transition-colors block leading-tight">
+                {{ auth.currentUser()?.name }}
+              </span>
+              <span class="text-[10px] text-slate-400 font-mono">
+                {{ auth.currentUser()?.department || 'Operations' }}
+              </span>
+            </div>
+            <span class="text-[9px] text-brand-400 font-semibold px-1.5 py-0.5 rounded bg-brand-500/10 border border-brand-500/20 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Profile
+            </span>
+          </div>
+
           <a
             routerLink="/records"
             class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700/80 transition-colors flex items-center gap-1.5"
@@ -203,12 +226,12 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
             </div>
           </div>
 
-          <!-- Recently Updated Records Table -->
+          <!-- Recently Updated Records Table with Profile Hover Card Option -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead>
                 <tr class="text-slate-400 border-b border-slate-800/80 pb-2 uppercase tracking-wider text-[10px]">
-                  <th class="py-2.5 font-semibold">Employee</th>
+                  <th class="py-2.5 font-semibold">Employee Profile (Hover Details)</th>
                   <th class="py-2.5 font-semibold">Department</th>
                   <th class="py-2.5 font-semibold">Status</th>
                   <th class="py-2.5 font-semibold">Confidence</th>
@@ -217,9 +240,40 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
               </thead>
               <tbody class="divide-y divide-slate-800/40">
                 <tr *ngFor="let rec of metrics()!.recentRecords" class="hover:bg-slate-800/30 transition-colors">
-                  <td class="py-3 font-semibold text-white">
-                    {{ rec.employeeName }}
-                    <span class="block text-[10px] text-slate-400 font-mono font-normal">{{ rec.employeeId }}</span>
+                  <td class="py-3">
+                    <!-- Interactive Profile Hover Trigger -->
+                    <div
+                      class="flex items-center gap-2.5 cursor-pointer group py-0.5"
+                      (mouseenter)="onCandidateMouseEnter(rec, $event)"
+                      (mouseleave)="onCandidateMouseLeave()"
+                    >
+                      <div class="relative flex-shrink-0">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-white text-xs shadow-md border border-brand-400/30 group-hover:scale-110 group-hover:ring-2 group-hover:ring-brand-400/60 transition-all">
+                          {{ getInitials(rec.employeeName) }}
+                        </div>
+                        <span
+                          class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-slate-900"
+                          [ngClass]="{
+                            'bg-emerald-400': rec.verificationStatus === 'VERIFIED',
+                            'bg-amber-400': rec.verificationStatus === 'IN_REVIEW' || rec.verificationStatus === 'PENDING' || rec.verificationStatus === 'RESUBMITTED',
+                            'bg-rose-400': rec.verificationStatus === 'ACTION_REQUIRED' || rec.verificationStatus === 'REJECTED'
+                          }"
+                        ></span>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="font-semibold text-white group-hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                          {{ rec.employeeName }}
+                          <span class="text-[9px] px-1.5 py-0.2 rounded-md bg-brand-500/10 text-brand-400 font-mono border border-brand-500/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                            View Profile
+                          </span>
+                        </span>
+                        <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono mt-0.5">
+                          <span class="text-slate-300 font-medium">{{ rec.employeeId }}</span>
+                          <span>•</span>
+                          <span class="text-slate-500 group-hover:text-slate-400 truncate max-w-[130px]">{{ rec.jobTitle || 'Profile' }}</span>
+                        </div>
+                      </div>
+                    </div>
                   </td>
                   <td class="py-3 text-slate-300">{{ rec.department }}</td>
                   <td class="py-3">
@@ -298,17 +352,17 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
       <div *ngIf="auth.isAdmin() && metrics() && metrics()!.recentAudits.length > 0" class="glass-panel p-6 rounded-2xl border border-slate-800">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg class="w-4 h-4 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            Recent Immutable Audit Trail Events
+            Immutable Audit Trail Activity
           </h3>
-          <a routerLink="/audit" class="text-xs font-semibold text-brand-400 hover:text-brand-300">Open Explorer</a>
+          <a routerLink="/audit" class="text-xs font-semibold text-brand-400 hover:text-brand-300">Audit Explorer</a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div
-            *ngFor="let audit of metrics()!.recentAudits"
+            *ngFor="let audit of metrics()!.recentAudits.slice(0, 3)"
             class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col justify-between"
           >
             <div>
@@ -331,6 +385,238 @@ import { ConfidenceGaugeComponent } from '../../shared/components/confidence-gau
           </div>
         </div>
       </div>
+
+      <!-- ========================================================== -->
+      <!-- FLOATING CANDIDATE PROFILE HOVER CARD (Interactive Popover) -->
+      <!-- ========================================================== -->
+      <div
+        *ngIf="hoveredRecord() && hoverPosition()"
+        (mouseenter)="onCardMouseEnter()"
+        (mouseleave)="onCardMouseLeave()"
+        class="fixed z-50 w-80 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-slate-700/80 shadow-2xl shadow-black/90 p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150 pointer-events-auto"
+        [style.top.px]="hoverPosition()!.top"
+        [style.left.px]="hoverPosition()!.left"
+      >
+        <!-- Card Header -->
+        <div class="flex items-start gap-3 pb-3 border-b border-slate-800/80">
+          <div class="relative flex-shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-white text-base shadow-lg border border-white/20">
+              {{ getInitials(hoveredRecord()!.employeeName) }}
+            </div>
+            <span
+              class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-slate-900 flex items-center justify-center text-[9px] font-bold text-white"
+              [ngClass]="{
+                'bg-emerald-500': hoveredRecord()!.verificationStatus === 'VERIFIED',
+                'bg-amber-500': hoveredRecord()!.verificationStatus === 'IN_REVIEW' || hoveredRecord()!.verificationStatus === 'PENDING' || hoveredRecord()!.verificationStatus === 'RESUBMITTED',
+                'bg-rose-500': hoveredRecord()!.verificationStatus === 'ACTION_REQUIRED' || hoveredRecord()!.verificationStatus === 'REJECTED'
+              }"
+            >
+              <span *ngIf="hoveredRecord()!.verificationStatus === 'VERIFIED'">✓</span>
+            </span>
+          </div>
+
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h4 class="text-sm font-bold text-white truncate">{{ hoveredRecord()!.employeeName }}</h4>
+              <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-brand-500/10 text-brand-300 border border-brand-500/20">
+                {{ hoveredRecord()!.employeeId }}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-300 font-medium truncate mt-0.5">{{ hoveredRecord()!.jobTitle || 'Unassigned Role' }}</p>
+            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/80 font-medium">
+                {{ hoveredRecord()!.department }}
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-mono">
+                {{ hoveredRecord()!.employmentType || 'FULL_TIME' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Confidence Breakdown -->
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-[11px] text-slate-400 font-medium">Trust Confidence Index</span>
+            <span class="font-mono font-bold text-white">{{ hoveredRecord()!.confidenceScore }}/100</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div
+              class="h-full rounded-full transition-all duration-300"
+              [ngClass]="{
+                'bg-gradient-to-r from-emerald-500 to-teal-400': hoveredRecord()!.confidenceScore >= 80,
+                'bg-gradient-to-r from-amber-500 to-orange-400': hoveredRecord()!.confidenceScore >= 50 && hoveredRecord()!.confidenceScore < 80,
+                'bg-gradient-to-r from-rose-500 to-red-400': hoveredRecord()!.confidenceScore < 50
+              }"
+              [style.width.%]="hoveredRecord()!.confidenceScore"
+            ></div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <span
+              class="text-[10px] font-semibold px-2 py-0.5 rounded-full border"
+              [ngClass]="getTrustTier(hoveredRecord()!.confidenceScore).bgClass + ' ' + getTrustTier(hoveredRecord()!.confidenceScore).colorClass"
+            >
+              {{ getTrustTier(hoveredRecord()!.confidenceScore).label }}
+            </span>
+            <app-status-badge [status]="hoveredRecord()!.verificationStatus"></app-status-badge>
+          </div>
+        </div>
+
+        <!-- Detailed Profile Metrics Grid -->
+        <div class="grid grid-cols-2 gap-2 text-[11px]">
+          <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Background Check</span>
+            <span
+              class="font-semibold font-mono text-[10px] flex items-center gap-1"
+              [ngClass]="{
+                'text-emerald-400': hoveredRecord()!.backgroundCheckStatus === 'PASSED',
+                'text-amber-400': hoveredRecord()!.backgroundCheckStatus === 'IN_PROGRESS' || hoveredRecord()!.backgroundCheckStatus === 'NOT_STARTED',
+                'text-rose-400': hoveredRecord()!.backgroundCheckStatus === 'FLAGGED'
+              }"
+            >
+              <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                'bg-emerald-400': hoveredRecord()!.backgroundCheckStatus === 'PASSED',
+                'bg-amber-400': hoveredRecord()!.backgroundCheckStatus === 'IN_PROGRESS' || hoveredRecord()!.backgroundCheckStatus === 'NOT_STARTED',
+                'bg-rose-400': hoveredRecord()!.backgroundCheckStatus === 'FLAGGED'
+              }"></span>
+              {{ hoveredRecord()!.backgroundCheckStatus }}
+            </span>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Tenure Start Date</span>
+            <span class="font-medium text-slate-200">
+              {{ hoveredRecord()!.startDate ? (hoveredRecord()!.startDate | date:'mediumDate') : 'Pending' }}
+            </span>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800" *ngIf="auth.isAdmin()">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Comp Grade</span>
+            <span class="font-mono font-semibold text-purple-300 text-[10px]">
+              {{ hoveredRecord()!.compensationGrade || 'Standard' }}
+            </span>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800">
+            <span class="text-[10px] text-slate-400 block mb-0.5">Dossier ID</span>
+            <span class="font-mono text-slate-400 text-[10px] truncate block">
+              {{ hoveredRecord()!.id }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+          <a
+            [routerLink]="['/records', hoveredRecord()!.id]"
+            class="flex-1 text-center py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-colors shadow-lg shadow-brand-500/20"
+          >
+            Inspect Full Dossier
+          </a>
+          <a
+            [routerLink]="['/records', hoveredRecord()!.id]"
+            [queryParams]="{ tab: 'evidence' }"
+            class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs border border-slate-700 transition-colors"
+            title="Evidence Vault"
+          >
+            Evidence
+          </a>
+        </div>
+      </div>
+
+      <!-- ========================================================== -->
+      <!-- FLOATING OPERATOR PROFILE HOVER CARD (Interactive Popover) -->
+      <!-- ========================================================== -->
+      <div
+        *ngIf="showOperatorProfile() && operatorHoverPosition()"
+        (mouseenter)="onOperatorCardMouseEnter()"
+        (mouseleave)="onOperatorCardMouseLeave()"
+        class="fixed z-50 w-80 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-slate-700/80 shadow-2xl shadow-black/90 p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150 pointer-events-auto"
+        [style.top.px]="operatorHoverPosition()!.top"
+        [style.left.px]="operatorHoverPosition()!.left"
+      >
+        <!-- Operator Card Header -->
+        <div class="flex items-start gap-3 pb-3 border-b border-slate-800/80">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-amber-500 flex items-center justify-center font-bold text-white text-base shadow-lg border border-white/20">
+            {{ (auth.currentUser()?.name || 'U')[0] }}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h4 class="text-sm font-bold text-white truncate">{{ auth.currentUser()?.name }}</h4>
+              <span
+                class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase"
+                [ngClass]="auth.isAdmin() ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'"
+              >
+                {{ auth.currentUser()?.role }}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-mono truncate mt-0.5">{{ auth.currentUser()?.email }}</p>
+            <div class="flex items-center gap-1.5 mt-1.5">
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 font-medium">
+                {{ auth.currentUser()?.department || 'Operations' }}
+              </span>
+              <span class="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Active Session
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clearance & Organization -->
+        <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1.5 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Organization</span>
+            <span class="font-semibold text-slate-200">Acme Global Security</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Security Clearance</span>
+            <span class="font-mono text-[10px] text-amber-400 font-bold">SOC-2 TYPE II VERIFIER</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">Persistence Engine</span>
+            <span class="font-mono text-[10px] text-brand-300 font-bold">100% PURE XML VAULT</span>
+          </div>
+        </div>
+
+        <!-- Permissions Capabilities -->
+        <div class="space-y-1.5 text-[11px]">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Assigned Permissions</span>
+          <div class="space-y-1 text-slate-300">
+            <div class="flex items-center gap-2" *ngIf="auth.isAdmin()">
+              <span class="text-emerald-400">✓</span> Full Verification & Decision Authority
+            </div>
+            <div class="flex items-center gap-2" *ngIf="auth.isAdmin()">
+              <span class="text-emerald-400">✓</span> Immutable Audit History Ledger Access
+            </div>
+            <div class="flex items-center gap-2" *ngIf="auth.isAdmin()">
+              <span class="text-emerald-400">✓</span> System Telemetry & Chaos Simulator
+            </div>
+            <div class="flex items-center gap-2" *ngIf="!auth.isAdmin()">
+              <span class="text-emerald-400">✓</span> Candidate Self-Service & Clarification Response
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2" *ngIf="auth.isAdmin()">
+          <a
+            routerLink="/users"
+            class="flex-1 text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs border border-slate-700 transition-colors"
+          >
+            User Management
+          </a>
+          <button
+            (click)="auth.logout()"
+            class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 font-medium text-xs border border-rose-500/30 transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
     </div>
   `
 })
@@ -340,6 +626,18 @@ export class DashboardComponent implements OnInit {
 
   isLoading = signal<boolean>(true);
   metrics = signal<DashboardMetrics | null>(null);
+
+  // Candidate Profile Hover State
+  hoveredRecord = signal<EmploymentRecord | null>(null);
+  hoverPosition = signal<{ top: number; left: number } | null>(null);
+  private isHoveringCard = false;
+  private hoverTimeout: any = null;
+
+  // Operator Profile Hover State
+  showOperatorProfile = signal<boolean>(false);
+  operatorHoverPosition = signal<{ top: number; left: number } | null>(null);
+  private isHoveringOperatorCard = false;
+  private operatorHoverTimeout: any = null;
 
   ngOnInit() {
     this.loadMetrics();
@@ -358,5 +656,115 @@ export class DashboardComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  // Candidate Profile Hover Handlers
+  onCandidateMouseEnter(rec: EmploymentRecord, event: MouseEvent) {
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+
+    const cardWidth = 320;
+    const cardHeight = 380;
+    let left = rect.right + 14;
+    let top = rect.top - 20;
+
+    // Boundary checking
+    if (left + cardWidth > window.innerWidth - 16) {
+      left = rect.left - cardWidth - 14;
+    }
+    if (top + cardHeight > window.innerHeight - 16) {
+      top = window.innerHeight - cardHeight - 16;
+    }
+    if (top < 16) top = 16;
+
+    this.hoverPosition.set({ top, left });
+    this.hoveredRecord.set(rec);
+  }
+
+  onCandidateMouseLeave() {
+    this.hoverTimeout = setTimeout(() => {
+      if (!this.isHoveringCard) {
+        this.hoveredRecord.set(null);
+      }
+    }, 180);
+  }
+
+  onCardMouseEnter() {
+    this.isHoveringCard = true;
+    if (this.hoverTimeout) clearTimeout(this.hoverTimeout);
+  }
+
+  onCardMouseLeave() {
+    this.isHoveringCard = false;
+    this.hoveredRecord.set(null);
+  }
+
+  // Operator Profile Hover Handlers
+  onOperatorMouseEnter(event: MouseEvent) {
+    if (this.operatorHoverTimeout) clearTimeout(this.operatorHoverTimeout);
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+
+    const cardWidth = 320;
+    let top = rect.bottom + 10;
+    let left = rect.left;
+
+    if (left + cardWidth > window.innerWidth - 16) {
+      left = window.innerWidth - cardWidth - 16;
+    }
+
+    this.operatorHoverPosition.set({ top, left });
+    this.showOperatorProfile.set(true);
+  }
+
+  onOperatorMouseLeave() {
+    this.operatorHoverTimeout = setTimeout(() => {
+      if (!this.isHoveringOperatorCard) {
+        this.showOperatorProfile.set(false);
+      }
+    }, 180);
+  }
+
+  onOperatorCardMouseEnter() {
+    this.isHoveringOperatorCard = true;
+    if (this.operatorHoverTimeout) clearTimeout(this.operatorHoverTimeout);
+  }
+
+  onOperatorCardMouseLeave() {
+    this.isHoveringOperatorCard = false;
+    this.showOperatorProfile.set(false);
+  }
+
+  // Helper Methods
+  getInitials(name?: string): string {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  getTrustTier(score: number): { label: string; colorClass: string; bgClass: string } {
+    if (score >= 80) {
+      return {
+        label: 'High Trust • Verified',
+        colorClass: 'text-emerald-400',
+        bgClass: 'bg-emerald-500/15 border-emerald-500/30'
+      };
+    }
+    if (score >= 50) {
+      return {
+        label: 'Moderate • In Review',
+        colorClass: 'text-amber-400',
+        bgClass: 'bg-amber-500/15 border-amber-500/30'
+      };
+    }
+    return {
+      label: 'High Risk • Action Needed',
+      colorClass: 'text-rose-400',
+      bgClass: 'bg-rose-500/15 border-rose-500/30'
+    };
   }
 }

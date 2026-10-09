@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -140,14 +140,18 @@ import { AuthService } from '../../core/auth/auth.service';
         </div>
       </div>
 
-      <!-- Current User Footer -->
-      <div class="p-3 border-t border-slate-800/80 bg-slate-900/40">
-        <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-800/50 border border-slate-700/50">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow">
+      <!-- Current User Footer with Hover Profile Popover -->
+      <div class="p-3 border-t border-slate-800/80 bg-slate-900/40 relative">
+        <div
+          class="flex items-center gap-3 p-2 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-brand-500/40 cursor-pointer transition-all group"
+          (mouseenter)="showUserPopover.set(true)"
+          (mouseleave)="showUserPopover.set(false)"
+        >
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow group-hover:scale-105 transition-transform">
             {{ (auth.currentUser()?.name || 'U')[0] }}
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-xs font-semibold text-white truncate">{{ auth.currentUser()?.name }}</p>
+            <p class="text-xs font-semibold text-white truncate group-hover:text-brand-300 transition-colors">{{ auth.currentUser()?.name }}</p>
             <div class="flex items-center gap-1.5 mt-0.5">
               <span
                 class="text-[10px] font-mono px-1.5 py-0.2 rounded font-bold uppercase"
@@ -167,10 +171,45 @@ import { AuthService } from '../../core/auth/auth.service';
             </svg>
           </button>
         </div>
+
+        <!-- Floating Flyout Popover on Hover -->
+        <div
+          *ngIf="showUserPopover()"
+          class="absolute bottom-full left-3 mb-2 w-56 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-slate-700/80 shadow-2xl p-4 space-y-3 animate-in fade-in zoom-in-95 duration-150 z-50 pointer-events-none"
+        >
+          <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center font-bold text-white text-xs shadow">
+              {{ (auth.currentUser()?.name || 'U')[0] }}
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-bold text-white truncate">{{ auth.currentUser()?.name }}</p>
+              <p class="text-[10px] text-slate-400 font-mono truncate">{{ auth.currentUser()?.email }}</p>
+            </div>
+          </div>
+          <div class="space-y-1.5 text-[10px]">
+            <div class="flex items-center justify-between text-slate-400">
+              <span>Department</span>
+              <span class="text-slate-200 font-semibold truncate max-w-[100px]">{{ auth.currentUser()?.department || 'Operations' }}</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-400">
+              <span>Role Scope</span>
+              <span class="font-mono font-bold" [ngClass]="auth.isAdmin() ? 'text-amber-400' : 'text-sky-400'">
+                {{ auth.isAdmin() ? 'Full Administrator' : 'General User' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-slate-400">
+              <span>Session Status</span>
+              <span class="text-emerald-400 font-medium flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   `
 })
 export class SidebarComponent {
   auth = inject(AuthService);
+  showUserPopover = signal<boolean>(false);
 }
