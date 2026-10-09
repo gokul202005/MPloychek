@@ -8,37 +8,34 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: '#eef8ff',
-          100: '#d8eeff',
-          200: '#b9e2ff',
-          300: '#89d1ff',
-          400: '#52b7ff',
-          500: '#2a98fc',
-          600: '#157cf0',
-          700: '#0f64dc',
-          800: '#1351b2',
-          900: '#15458c',
-          950: '#0c2a5b',
+          50: '#f0f4ff',
+          100: '#e0eaff',
+          200: '#c7d7fe',
+          300: '#a4bcfd',
+          400: '#7c9afb',
+          500: '#5372f6',
+          600: '#3b54ec',
+          700: '#2d3fd6',
+          800: '#2835ad',
+          900: '#253088',
+          950: '#171c54',
         },
         slate: {
-          850: '#172033',
-          950: '#0b1120',
+          850: '#131b2e',
+          900: '#0c1322',
+          950: '#070b14',
         },
-        emerald: {
-          500: '#10b981',
-          600: '#059669',
-        },
-        amber: {
-          500: '#f59e0b',
-          600: '#d97706',
-        },
-        rose: {
-          500: '#f43f5e',
-          600: '#e11d48',
+        cyber: {
+          cyan: '#06b6d4',
+          teal: '#0d9488',
+          emerald: '#10b981',
+          indigo: '#6366f1',
+          violet: '#8b5cf6',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
       }
     },
   },

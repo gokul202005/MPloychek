@@ -1,29 +1,59 @@
 /**
- * Generates an authentic, valid PDF-1.4 binary file with header, metadata, and body text.
- * Renders cleanly in Chrome, Edge, Adobe Reader, and all PDF viewers without any external dependencies.
+ * Generates an authentic, valid PDF-1.4 binary file with structured typography,
+ * crisp vector divider rules, and an official verification footer.
+ * Renders cleanly and beautifully in Chrome, Edge, Adobe Reader, and all PDF engines.
  */
 export function generateSimplePdf(title: string, lines: string[]): Buffer {
-  const contentStream = [
+  const contentStream: string[] = [
+    // Top border rule
+    '0.15 0.35 0.85 RG',
+    '2 w',
+    '45 745 m 565 745 l S',
+
+    // Document Title
     'BT',
-    '/F1 18 Tf',
-    '50 740 Td',
+    '/F1 16 Tf',
+    '0.05 0.1 0.25 rg',
+    '45 720 Td',
     `(${escapePdf(title)}) Tj`,
-    '0 -30 Td',
-    '/F1 10 Tf',
-    '(========================================================================) Tj',
-    '0 -25 Td',
-    '/F1 11 Tf'
+    'ET',
+
+    // Secondary accent line
+    '0.7 0.75 0.85 RG',
+    '0.75 w',
+    '45 705 m 565 705 l S',
+
+    // Body container text
+    'BT',
+    '/F1 10.5 Tf',
+    '0.15 0.2 0.3 rg',
+    '45 680 Td'
   ];
 
-  for (const line of lines) {
+  // Each content line with clean, even spacing
+  lines.forEach((line, index) => {
+    if (index > 0) {
+      contentStream.push('0 -22 Td');
+    }
     contentStream.push(`(${escapePdf(line)}) Tj`);
-    contentStream.push('0 -18 Td');
-  }
+  });
 
-  contentStream.push('0 -20 Td');
-  contentStream.push('/F1 9 Tf');
-  contentStream.push('(VERIFIED BY MPLOYCHEK WORKFORCE TRUST PLATFORM - CRYPTOGRAPHIC EVIDENCE VAULT) Tj');
   contentStream.push('ET');
+
+  // Bottom verification footer box
+  contentStream.push(
+    '0.92 0.95 0.99 rg',
+    '45 480 520 36 re f',
+    '0.2 0.4 0.7 RG',
+    '0.75 w',
+    '45 480 520 36 re S',
+    'BT',
+    '/F1 8.5 Tf',
+    '0.1 0.3 0.6 rg',
+    '55 494 Td',
+    '(OFFICIALLY ATTESTED & VERIFIED BY MPLOYCHEK CRYPTOGRAPHIC EVIDENCE VAULT) Tj',
+    'ET'
+  );
 
   const streamContent = contentStream.join('\n');
   const streamLength = Buffer.byteLength(streamContent, 'utf8');

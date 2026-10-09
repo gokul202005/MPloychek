@@ -115,7 +115,8 @@ import { PdfViewerModalComponent } from '../../shared/components/pdf-viewer-moda
             </div>
             <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60 flex flex-col justify-between">
               <span class="text-slate-400 block text-[10px] font-medium mb-1">Background Screening</span>
-              <div *ngIf="auth.isAdmin()" class="relative">
+              <!-- Only allow changing if NOT verified -->
+              <div *ngIf="auth.isAdmin() && record()!.verificationStatus !== 'VERIFIED'" class="relative">
                 <select
                   [value]="record()!.backgroundCheckStatus"
                   (change)="onBackgroundStatusChange($event)"
@@ -128,13 +129,21 @@ import { PdfViewerModalComponent } from '../../shared/components/pdf-viewer-moda
                   <option value="FLAGGED" class="bg-slate-900 text-rose-400">FLAGGED</option>
                 </select>
               </div>
-              <span
-                *ngIf="!auth.isAdmin()"
-                class="font-semibold text-xs block mt-0.5"
-                [ngClass]="record()!.backgroundCheckStatus === 'PASSED' ? 'text-emerald-400' : record()!.backgroundCheckStatus === 'FLAGGED' ? 'text-rose-400' : 'text-amber-400'"
+              <!-- Locked state when VERIFIED or for non-admin -->
+              <div
+                *ngIf="!auth.isAdmin() || record()!.verificationStatus === 'VERIFIED'"
+                class="flex items-center gap-1.5 mt-0.5"
               >
-                {{ record()!.backgroundCheckStatus }}
-              </span>
+                <span
+                  class="font-semibold text-xs"
+                  [ngClass]="record()!.backgroundCheckStatus === 'PASSED' ? 'text-emerald-400' : record()!.backgroundCheckStatus === 'FLAGGED' ? 'text-rose-400' : 'text-amber-400'"
+                >
+                  {{ record()!.backgroundCheckStatus }}
+                </span>
+                <span *ngIf="record()!.verificationStatus === 'VERIFIED'" class="text-[10px] text-slate-500 font-mono" title="Verified - locked">
+                  🔒
+                </span>
+              </div>
             </div>
             <div class="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800/60">
               <span class="text-slate-400 block text-[10px] font-medium">Audit Cycle / Follow-up</span>

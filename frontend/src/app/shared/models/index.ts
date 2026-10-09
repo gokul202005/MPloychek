@@ -222,7 +222,7 @@ export interface TelemetryRecord {
   path: string;
   status: number;
   durationMs: number;
-  simulatedDelayMs: number;
+  simulatedDelayMs?: number;
   timestamp: string;
   ip: string;
   userAgent: string;

@@ -342,6 +342,7 @@ export class TelemetryDashboardComponent implements OnInit, OnDestroy {
           path: '/api/telemetry/ping',
           status: 200,
           durationMs: duration,
+          simulatedDelayMs: 0,
           timestamp: new Date().toISOString(),
           ip: '127.0.0.1',
           userAgent: 'browser',
