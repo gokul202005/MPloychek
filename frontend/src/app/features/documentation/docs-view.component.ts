@@ -127,6 +127,32 @@ import { CommonModule } from '@angular/common';
             <p>
               The platform incorporates an auditable verification timeline, deterministic confidence scoring, secure document depository, and strict confidentiality protections ensuring sensitive internal notes and compensation tiers are safeguarded.
             </p>
+
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-brand-500/20 space-y-1.5">
+                <div class="flex items-center gap-2 text-brand-400 font-bold">
+                  <span class="w-2 h-2 rounded-full bg-brand-400"></span>
+                  <span>Angular 19 & Libraries</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-normal">Standalone architecture, reactive Signals state management, functional route guards, RxJS pipelines & reusable components.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-emerald-500/20 space-y-1.5">
+                <div class="flex items-center gap-2 text-emerald-400 font-bold">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span>API & Cloud Framework</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-normal">Pure XML file storage with fast-xml-parser, serialized write mutex, live telemetry, latency simulator & XXE defense.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-900/90 border border-purple-500/20 space-y-1.5">
+                <div class="flex items-center gap-2 text-purple-400 font-bold">
+                  <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                  <span>Original UI & Architecture</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-normal">Bespoke dark cybersecurity aesthetic, SVG circular trust gauge, 5-pillar breakdown & human-crafted architecture without copied code.</p>
+              </div>
+            </div>
           </section>
 
           <!-- Section 2: Roles -->
