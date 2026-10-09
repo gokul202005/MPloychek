@@ -1,14 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import { DeadlineRepository } from '../repositories/xml/deadlineRepository';
+import { RecordRepository } from '../repositories/xml/recordRepository';
 import { AuditService } from './auditService';
 import { ComplianceDeadline, SafeUser } from '../types';
 
 export class DeadlineService {
   private deadlineRepo: DeadlineRepository;
+  private recordRepo: RecordRepository;
   private auditService: AuditService;
 
   constructor() {
     this.deadlineRepo = new DeadlineRepository();
+    this.recordRepo = new RecordRepository();
     this.auditService = new AuditService();
   }
 
@@ -49,6 +52,11 @@ export class DeadlineService {
     currentUser: SafeUser,
     reqMeta: { ip: string; userAgent: string; requestId: string }
   ): Promise<ComplianceDeadline> {
+    const targetRecord = await this.recordRepo.getById(data.recordId);
+    if (!targetRecord || targetRecord.organizationId !== currentUser.organizationId) {
+      throw new Error(`Target record ID '${data.recordId}' does not exist in your organization.`);
+    }
+
     const id = `dl-${uuidv4().substring(0, 8)}`;
     const now = new Date().toISOString();
 

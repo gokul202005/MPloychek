@@ -816,6 +816,42 @@ import { PdfViewerModalComponent } from '../../shared/components/pdf-viewer-moda
         (close)="closePdfModal()"
       ></app-pdf-viewer-modal>
     </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading() && !record()" class="glass-panel p-16 rounded-2xl border border-slate-800 text-center max-w-md mx-auto my-12 space-y-3">
+      <div class="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-xs text-slate-400 font-medium">Accessing encrypted record vault...</p>
+    </div>
+
+    <!-- Record Not Found State -->
+    <div *ngIf="recordNotFound() && !isLoading()" class="glass-panel p-12 rounded-2xl border border-slate-800 text-center max-w-xl mx-auto my-12 space-y-4 shadow-2xl">
+      <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center shadow-lg shadow-amber-500/10">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-white tracking-tight">Record Vault Not Found</h2>
+      <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+        The requested workforce record ID <span class="font-mono text-cyan-400 font-semibold px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">{{ recordId }}</span> does not exist in the active XML repository or has been archived.
+      </p>
+      <div class="pt-3 flex items-center justify-center gap-3">
+        <a
+          routerLink="/records"
+          class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Browse Verification Directory</span>
+        </a>
+        <a
+          routerLink="/compliance"
+          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+        >
+          Compliance Deadlines
+        </a>
+      </div>
+    </div>
   `
 })
 export class RecordDetailComponent implements OnInit {
@@ -827,6 +863,8 @@ export class RecordDetailComponent implements OnInit {
   route = inject(ActivatedRoute);
 
   recordId = '';
+  isLoading = signal<boolean>(true);
+  recordNotFound = signal<boolean>(false);
   record = signal<EmploymentRecord | null>(null);
   evidenceItems = signal<EvidenceItem[]>([]);
   timelineEvents = signal<VerificationEvent[]>([]);
@@ -908,8 +946,11 @@ export class RecordDetailComponent implements OnInit {
   }
 
   loadAll() {
+    this.isLoading.set(true);
+    this.recordNotFound.set(false);
     this.recordService.getRecordById(this.recordId).subscribe({
       next: res => {
+        this.isLoading.set(false);
         if (res.data) {
           this.record.set(res.data);
           try {
@@ -917,29 +958,38 @@ export class RecordDetailComponent implements OnInit {
           } catch {
             this.confidenceBreakdown.set(null);
           }
+        } else {
+          this.record.set(null);
+          this.recordNotFound.set(true);
         }
       },
       error: err => {
-        this.toast.error(err.error?.error || 'Failed to load record details.');
+        this.isLoading.set(false);
+        this.record.set(null);
+        this.recordNotFound.set(true);
+        this.toast.error(err.error?.error || 'Record not found in the XML registry.');
       }
     });
 
     this.recordService.getTimeline(this.recordId).subscribe({
       next: res => {
         if (res.data) this.timelineEvents.set(res.data);
-      }
+      },
+      error: () => {}
     });
 
     this.evidenceService.getEvidenceForRecord(this.recordId).subscribe({
       next: res => {
         if (res.data) this.evidenceItems.set(res.data);
-      }
+      },
+      error: () => {}
     });
 
     this.clarService.getClarificationsForRecord(this.recordId).subscribe({
       next: res => {
         if (res.data) this.clarifications.set(res.data);
-      }
+      },
+      error: () => {}
     });
   }
 

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ComplianceService } from '../../core/services/compliance.service';
+import { RecordService } from '../../core/services/record.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
-import { ComplianceDeadline } from '../../shared/models';
+import { ComplianceDeadline, EmploymentRecord } from '../../shared/models';
 
 @Component({
   selector: 'app-deadline-center',
@@ -110,6 +111,10 @@ import { ComplianceDeadline } from '../../shared/models';
                 <span>Assigned Reviewer:</span>
                 <span class="text-slate-300">{{ dl.assignedReviewerName || 'Unassigned' }}</span>
               </div>
+              <div class="flex items-center justify-between" *ngIf="getRecordName(dl.recordId)">
+                <span>Target Worker:</span>
+                <span class="text-slate-300 font-medium truncate max-w-[160px]">{{ getRecordName(dl.recordId) }}</span>
+              </div>
               <div class="flex items-center justify-between">
                 <span>Countdown:</span>
                 <span class="font-mono font-bold text-xs" [ngClass]="getCountdownColor(dl)">
@@ -153,15 +158,19 @@ import { ComplianceDeadline } from '../../shared/models';
 
           <form (ngSubmit)="onCreateSubmit()" class="space-y-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Target Record ID *</label>
-              <input
-                type="text"
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Target Employee Profile *</label>
+              <select
                 [(ngModel)]="newDeadline.recordId"
+                (ngModelChange)="onRecordSelect($event)"
                 name="recordId"
                 required
-                placeholder="rec-001"
-                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 font-mono"
-              />
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+              >
+                <option *ngFor="let rec of availableRecords()" [value]="rec.id">
+                  {{ rec.employeeName }} ({{ rec.employeeId }} — {{ rec.jobTitle }})
+                </option>
+              </select>
+              <p class="text-[10px] text-slate-400 mt-1">Select an active workforce profile from the XML registry.</p>
             </div>
 
             <div>
@@ -256,14 +265,16 @@ import { ComplianceDeadline } from '../../shared/models';
 export class DeadlineCenterComponent implements OnInit {
   auth = inject(AuthService);
   compService = inject(ComplianceService);
+  recordService = inject(RecordService);
   toast = inject(ToastService);
 
   deadlines = signal<ComplianceDeadline[]>([]);
+  availableRecords = signal<EmploymentRecord[]>([]);
   activeFilter: 'ALL' | 'OVERDUE' | 'ACTIVE' | 'COMPLETED' = 'ALL';
   showCreateModal = signal<boolean>(false);
 
   newDeadline: any = {
-    recordId: 'rec-001',
+    recordId: '',
     title: '',
     category: 'VERIFICATION_RENEWAL',
     priority: 'HIGH',
@@ -281,6 +292,32 @@ export class DeadlineCenterComponent implements OnInit {
 
   ngOnInit() {
     this.loadDeadlines();
+    this.loadRecords();
+  }
+
+  loadRecords() {
+    this.recordService.getRecords({ limit: 100 }).subscribe({
+      next: res => {
+        if (res.data?.items) {
+          this.availableRecords.set(res.data.items);
+          if (res.data.items.length > 0 && !this.newDeadline.recordId) {
+            this.newDeadline.recordId = res.data.items[0].id;
+          }
+        }
+      }
+    });
+  }
+
+  getRecordName(recordId: string): string {
+    const match = this.availableRecords().find(r => r.id === recordId);
+    return match ? match.employeeName : '';
+  }
+
+  onRecordSelect(recId: string) {
+    const rec = this.availableRecords().find(r => r.id === recId);
+    if (rec && (!this.newDeadline.title || this.newDeadline.title.startsWith('Verification Renewal:'))) {
+      this.newDeadline.title = `Verification Renewal: ${rec.employeeName}`;
+    }
   }
 
   loadDeadlines() {
@@ -349,7 +386,19 @@ export class DeadlineCenterComponent implements OnInit {
     });
   }
 
-  openCreateModal() { this.showCreateModal.set(true); }
+  openCreateModal() {
+    if (this.availableRecords().length > 0) {
+      if (!this.newDeadline.recordId) {
+        this.newDeadline.recordId = this.availableRecords()[0].id;
+      }
+      const currentRec = this.availableRecords().find(r => r.id === this.newDeadline.recordId);
+      if (currentRec && !this.newDeadline.title) {
+        this.newDeadline.title = `Verification Renewal: ${currentRec.employeeName}`;
+      }
+    }
+    this.showCreateModal.set(true);
+  }
+
   closeCreateModal() { this.showCreateModal.set(false); }
 
   onCreateSubmit() {
