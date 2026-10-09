@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mploychekData schemaVersion="1.0" lastUpdated="2026-10-09T10:29:48.600Z" updateReason="Append Audit Event audit-015b1efb (VERIFICATION_DECISION)">
+<mploychekData schemaVersion="1.0" lastUpdated="2026-10-09T10:40:02.192Z" updateReason="Mark Notification notif-0cff6b4e as read">
   <organizations>
     <organization>
       <id>org-001</id>
@@ -23,9 +23,9 @@
       <department>Workforce Compliance &amp; Trust</department>
       <title>Chief Compliance Officer</title>
       <phone>+1 (555) 234-5678</phone>
-      <lastLoginAt>2026-10-09T10:29:48.314Z</lastLoginAt>
+      <lastLoginAt>2026-10-09T10:39:43.284Z</lastLoginAt>
       <createdAt>2026-01-15T08:30:00.000Z</createdAt>
-      <updatedAt>2026-10-09T10:29:48.318Z</updatedAt>
+      <updatedAt>2026-10-09T10:39:43.291Z</updatedAt>
     </user>
     <user>
       <id>usr-user-01</id>
@@ -38,9 +38,9 @@
       <department>Talent Acquisition &amp; HR Operations</department>
       <title>Senior Talent Operations Specialist</title>
       <phone>+1 (555) 345-6789</phone>
-      <lastLoginAt>2026-10-09T10:29:48.404Z</lastLoginAt>
+      <lastLoginAt>2026-10-09T10:39:43.391Z</lastLoginAt>
       <createdAt>2026-01-20T09:00:00.000Z</createdAt>
-      <updatedAt>2026-10-09T10:29:48.406Z</updatedAt>
+      <updatedAt>2026-10-09T10:39:43.394Z</updatedAt>
     </user>
     <user>
       <id>usr-user-02</id>
@@ -298,6 +298,29 @@
       <createdAt>2026-10-09T10:29:48.520Z</createdAt>
       <updatedAt>2026-10-09T10:29:48.570Z</updatedAt>
     </record>
+    <record>
+      <id>rec-cf0808dd</id>
+      <employeeId>EMP-UNIT-01</employeeId>
+      <employeeName>Unit Test Worker</employeeName>
+      <organizationId>org-001</organizationId>
+      <department>Technology</department>
+      <jobTitle>Software Architect</jobTitle>
+      <employmentType>FULL_TIME</employmentType>
+      <startDate>2026-01-01</startDate>
+      <verificationStatus>VERIFIED</verificationStatus>
+      <backgroundCheckStatus>PASSED</backgroundCheckStatus>
+      <backgroundCheckDate>2026-10-09</backgroundCheckDate>
+      <assignedReviewerId>usr-admin-01</assignedReviewerId>
+      <assignedReviewerName>Eleanor Vance</assignedReviewerName>
+      <internalAssessmentNotes>Confidential reviewer notes - verified</internalAssessmentNotes>
+      <publicReviewerNotes>Public approval notice</publicReviewerNotes>
+      <confidenceScore>70</confidenceScore>
+      <confidenceLevel>MEDIUM</confidenceLevel>
+      <confidenceBreakdownJson>{&quot;score&quot;:70,&quot;level&quot;:&quot;MEDIUM&quot;,&quot;summary&quot;:&quot;Moderate confidence: Key elements present but pending full document review or background check completion.&quot;,&quot;factors&quot;:[{&quot;factor&quot;:&quot;Core Profile Completeness&quot;,&quot;score&quot;:20,&quot;weight&quot;:20,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All mandatory identity and organizational attributes are provided.&quot;},{&quot;factor&quot;:&quot;Evidence Portfolio Coverage&quot;,&quot;score&quot;:0,&quot;weight&quot;:25,&quot;status&quot;:&quot;CRITICAL_MISSING&quot;,&quot;explanation&quot;:&quot;No supporting evidence documents have been uploaded to the Evidence Vault.&quot;},{&quot;factor&quot;:&quot;Evidence Validation &amp; Audit&quot;,&quot;score&quot;:20,&quot;weight&quot;:25,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Evidence credentials attested and validated under compliance verification decision.&quot;},{&quot;factor&quot;:&quot;Workforce Background Screening&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;Background check passed successfully on 2026-10-09.&quot;},{&quot;factor&quot;:&quot;Clarification Resolution &amp; Due Diligence&quot;,&quot;score&quot;:15,&quot;weight&quot;:15,&quot;status&quot;:&quot;OPTIMAL&quot;,&quot;explanation&quot;:&quot;All compliance and due diligence inquiries resolved and verified.&quot;}],&quot;calculatedAt&quot;:&quot;2026-10-09T10:39:43.548Z&quot;}</confidenceBreakdownJson>
+      <createdBy>usr-user-01</createdBy>
+      <createdAt>2026-10-09T10:39:43.508Z</createdAt>
+      <updatedAt>2026-10-09T10:39:43.551Z</updatedAt>
+    </record>
   </employmentRecords>
   <evidenceItems>
     <evidence>
@@ -509,6 +532,35 @@
       <scoreDelta>50</scoreDelta>
       <timestamp>2026-10-09T10:29:48.561Z</timestamp>
     </event>
+    <event>
+      <id>ev-cf80dc7a</id>
+      <recordId>rec-cf0808dd</recordId>
+      <organizationId>org-001</organizationId>
+      <eventType>RECORD_CREATED</eventType>
+      <title>Employment Record Created</title>
+      <description>Record initiated for Unit Test Worker (EMP-UNIT-01) by Marcus Chen. Baseline trust confidence evaluated at 20/100.</description>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <newStatus>PENDING</newStatus>
+      <scoreDelta>20</scoreDelta>
+      <timestamp>2026-10-09T10:39:43.508Z</timestamp>
+    </event>
+    <event>
+      <id>ev-2e4d9906</id>
+      <recordId>rec-cf0808dd</recordId>
+      <organizationId>org-001</organizationId>
+      <eventType>DECISION_RECORDED</eventType>
+      <title>Verification Decision: VERIFIED</title>
+      <description>Reviewer Eleanor Vance recorded decision: VERIFIED. Reason: Credentials thoroughly reviewed during automated test pass.</description>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <previousStatus>PENDING</previousStatus>
+      <newStatus>VERIFIED</newStatus>
+      <scoreDelta>50</scoreDelta>
+      <timestamp>2026-10-09T10:39:43.542Z</timestamp>
+    </event>
   </verificationEvents>
   <clarificationRequests>
     <clarification>
@@ -663,7 +715,7 @@
       <category>STATUS_CHANGE</category>
       <targetType>RECORD</targetType>
       <targetId>rec-225041f5</targetId>
-      <isRead>false</isRead>
+      <isRead>true</isRead>
       <createdAt>2026-10-09T10:26:04.895Z</createdAt>
     </notification>
     <notification>
@@ -687,7 +739,7 @@
       <category>STATUS_CHANGE</category>
       <targetType>RECORD</targetType>
       <targetId>rec-db83436b</targetId>
-      <isRead>false</isRead>
+      <isRead>true</isRead>
       <createdAt>2026-10-09T10:29:48.520Z</createdAt>
     </notification>
     <notification>
@@ -701,6 +753,30 @@
       <targetId>rec-db83436b</targetId>
       <isRead>false</isRead>
       <createdAt>2026-10-09T10:29:48.561Z</createdAt>
+    </notification>
+    <notification>
+      <id>notif-7b40cc05</id>
+      <recipientId>ALL_ADMINS</recipientId>
+      <organizationId>org-001</organizationId>
+      <title>New Employment Record Created</title>
+      <message>Marcus Chen submitted a new employment record for Unit Test Worker.</message>
+      <category>STATUS_CHANGE</category>
+      <targetType>RECORD</targetType>
+      <targetId>rec-cf0808dd</targetId>
+      <isRead>false</isRead>
+      <createdAt>2026-10-09T10:39:43.508Z</createdAt>
+    </notification>
+    <notification>
+      <id>notif-6bdb19d7</id>
+      <recipientId>usr-user-01</recipientId>
+      <organizationId>org-001</organizationId>
+      <title>Verification Decision: VERIFIED</title>
+      <message>The verification status for Unit Test Worker has been updated to VERIFIED. Notes: Credentials thoroughly reviewed during automated test pass.</message>
+      <category>STATUS_CHANGE</category>
+      <targetType>RECORD</targetType>
+      <targetId>rec-cf0808dd</targetId>
+      <isRead>false</isRead>
+      <createdAt>2026-10-09T10:39:43.542Z</createdAt>
     </notification>
   </notifications>
   <auditEvents>
@@ -965,6 +1041,101 @@
       <actionType>VERIFICATION_DECISION</actionType>
       <entityType>RECORD</entityType>
       <entityId>rec-db83436b</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>Credentials thoroughly reviewed during automated test pass.</reason>
+      <metadataJson>{&quot;previousStatus&quot;:&quot;PENDING&quot;,&quot;newStatus&quot;:&quot;VERIFIED&quot;}</metadataJson>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-8d399654</id>
+      <timestamp>2026-10-09T10:39:43.302Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-26fb4739</id>
+      <timestamp>2026-10-09T10:39:43.400Z</timestamp>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_SUCCESS</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-user-01</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-9fedb49f</id>
+      <timestamp>2026-10-09T10:39:43.485Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>AUTH_LOGIN_FAILED</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>usr-admin-01</entityId>
+      <outcome>FAILURE</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>Invalid password credentials</reason>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-d1e827e0</id>
+      <timestamp>2026-10-09T10:39:43.498Z</timestamp>
+      <actorId>anonymous</actorId>
+      <actorName>nonexistent@test.com</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>unknown</organizationId>
+      <actionType>AUTH_LOGIN_FAILED</actionType>
+      <entityType>AUTH</entityType>
+      <entityId>nonexistent@test.com</entityId>
+      <outcome>FAILURE</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <reason>User not found</reason>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-ab600c28</id>
+      <timestamp>2026-10-09T10:39:43.531Z</timestamp>
+      <actorId>usr-user-01</actorId>
+      <actorName>Marcus Chen</actorName>
+      <actorRole>USER</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>RECORD_CREATE</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-cf0808dd</entityId>
+      <outcome>SUCCESS</outcome>
+      <requestId>req-test-runner-01</requestId>
+      <ip>127.0.0.1</ip>
+      <userAgent>test-runner</userAgent>
+      <metadataJson>{&quot;employeeName&quot;:&quot;Unit Test Worker&quot;,&quot;employeeId&quot;:&quot;EMP-UNIT-01&quot;}</metadataJson>
+    </auditEvent>
+    <auditEvent>
+      <id>audit-0e3bde4c</id>
+      <timestamp>2026-10-09T10:39:43.568Z</timestamp>
+      <actorId>usr-admin-01</actorId>
+      <actorName>Eleanor Vance</actorName>
+      <actorRole>ADMIN</actorRole>
+      <organizationId>org-001</organizationId>
+      <actionType>VERIFICATION_DECISION</actionType>
+      <entityType>RECORD</entityType>
+      <entityId>rec-cf0808dd</entityId>
       <outcome>SUCCESS</outcome>
       <requestId>req-test-runner-01</requestId>
       <ip>127.0.0.1</ip>

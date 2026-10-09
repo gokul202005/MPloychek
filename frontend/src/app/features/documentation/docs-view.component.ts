@@ -393,15 +393,21 @@ export class DocsViewComponent implements OnInit, OnDestroy {
   }
 
   private detectActiveSection(): void {
-    // If scrolled to bottom of document, automatically activate the last section
+    // If at or near top of the page, always activate section 1 (overview)
+    if (window.scrollY < 200) {
+      this.activeSection = 'overview';
+      return;
+    }
+
+    // If scrolled near bottom of document and scrolled down significantly, activate section 8
     const scrollBottom = window.innerHeight + window.scrollY;
     const documentHeight = document.documentElement.scrollHeight;
-    if (scrollBottom >= documentHeight - 80) {
+    if (window.scrollY > 800 && scrollBottom >= documentHeight - 120) {
       this.activeSection = 'security';
       return;
     }
 
-    const scrollPosition = window.scrollY + 200;
+    const scrollPosition = window.scrollY + 180;
 
     for (let i = this.sectionIds.length - 1; i >= 0; i--) {
       const id = this.sectionIds[i];
