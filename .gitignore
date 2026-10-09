@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+**/node_modules/
 .pnp
 .pnp.js
 
@@ -12,6 +13,7 @@ node_modules/
 
 # Build output
 dist/
+**/dist/
 build/
 out/
 .angular/
@@ -23,7 +25,6 @@ yarn-error.log*
 *.log
 
 # Sensitive private data & backups (Section 3 & 20)
-backend/data/*.xml
 backend/data/*.tmp*
 backend/data/backups/
 backend/uploads/
@@ -31,7 +32,9 @@ uploads/
 
 # IDE & OS
 .idea/
+**/.idea/
 .vscode/
+**/.vscode/
 *.suo
 *.ntvs*
 *.njsproj
