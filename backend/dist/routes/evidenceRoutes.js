@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const evidenceController_1 = require("../controllers/evidenceController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+const evidenceController = new evidenceController_1.EvidenceController();
+router.use(authMiddleware_1.authenticateToken);
+router.get('/:id', evidenceController.getEvidenceById);
+router.patch('/:id/review', authMiddleware_1.requireAdmin, evidenceController.reviewEvidence);
+router.get('/:id/download', evidenceController.downloadEvidence);
+exports.default = router;

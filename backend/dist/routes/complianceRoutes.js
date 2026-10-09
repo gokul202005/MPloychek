@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const complianceController_1 = require("../controllers/complianceController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+const complianceController = new complianceController_1.ComplianceController();
+router.use(authMiddleware_1.authenticateToken);
+router.get('/deadlines', complianceController.getDeadlines);
+router.post('/deadlines', authMiddleware_1.requireAdmin, complianceController.createDeadline);
+router.patch('/deadlines/:id', authMiddleware_1.requireAdmin, complianceController.updateDeadline);
+exports.default = router;

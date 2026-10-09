@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const clarificationController_1 = require("../controllers/clarificationController");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const router = (0, express_1.Router)();
+const clarController = new clarificationController_1.ClarificationController();
+router.use(authMiddleware_1.authenticateToken);
+router.post('/:id/respond', clarController.respondClarification);
+exports.default = router;

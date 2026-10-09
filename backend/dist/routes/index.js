@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authRoutes_1 = __importDefault(require("./authRoutes"));
+const recordRoutes_1 = __importDefault(require("./recordRoutes"));
+const evidenceRoutes_1 = __importDefault(require("./evidenceRoutes"));
+const clarificationRoutes_1 = __importDefault(require("./clarificationRoutes"));
+const userRoutes_1 = __importDefault(require("./userRoutes"));
+const complianceRoutes_1 = __importDefault(require("./complianceRoutes"));
+const auditRoutes_1 = __importDefault(require("./auditRoutes"));
+const telemetryRoutes_1 = __importDefault(require("./telemetryRoutes"));
+const notificationRoutes_1 = __importDefault(require("./notificationRoutes"));
+const analyticsRoutes_1 = __importDefault(require("./analyticsRoutes"));
+const router = (0, express_1.Router)();
+router.use('/auth', authRoutes_1.default);
+router.use('/records', recordRoutes_1.default);
+router.use('/evidence', evidenceRoutes_1.default);
+router.use('/clarifications', clarificationRoutes_1.default);
+router.use('/users', userRoutes_1.default);
+router.use('/compliance', complianceRoutes_1.default);
+router.use('/audit-events', auditRoutes_1.default);
+router.use('/telemetry', telemetryRoutes_1.default);
+router.use('/notifications', notificationRoutes_1.default);
+router.use('/analytics', analyticsRoutes_1.default);
+exports.default = router;
