@@ -17,7 +17,7 @@ class RecordController {
     getRecords = async (req, res, next) => {
         try {
             const user = req.user;
-            const { search, status, department, employmentType, sortBy, sortOrder, page, limit } = req.query;
+            const { search, status, department, employmentType, sortBy, sortOrder, page, limit, onlyMine } = req.query;
             const result = await this.recordService.getRecords(user, {
                 search: search,
                 status: status,
@@ -26,7 +26,8 @@ class RecordController {
                 sortBy: sortBy,
                 sortOrder: sortOrder,
                 page: page ? parseInt(page, 10) : 1,
-                limit: limit ? parseInt(limit, 10) : 10
+                limit: limit ? parseInt(limit, 10) : 10,
+                onlyMine: onlyMine === 'true'
             });
             res.json({
                 success: true,
@@ -102,7 +103,7 @@ class RecordController {
                 userAgent: req.headers['user-agent'] || 'browser',
                 requestId: req.requestId || 'unknown'
             };
-            const record = await this.recordService.recordVerificationDecision(req.params.id, validated.decision, validated.reason, validated.publicNotes, validated.internalNotes, validated.followUpDeadline, user, reqMeta);
+            const record = await this.recordService.recordVerificationDecision(req.params.id, validated.decision, validated.reason, validated.publicNotes, validated.internalNotes, validated.followUpDeadline, user, reqMeta, validated.backgroundCheckStatus);
             res.json({
                 success: true,
                 message: `Verification decision recorded: ${validated.decision}`,

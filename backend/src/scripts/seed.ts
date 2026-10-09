@@ -605,7 +605,7 @@ async function seed() {
       organizationId: 'org-001',
       title: 'Action Required: W-2 Discrepancy Inquiry',
       message: 'Reviewer Eleanor Vance submitted a clarification inquiry for Carlos Mendez regarding EIN alignment.',
-      category: 'CLARIFICATION_REQUIRED',
+      category: 'CLARIFICATION',
       targetType: 'RECORD',
       targetId: 'rec-004',
       isRead: false,
@@ -617,7 +617,7 @@ async function seed() {
       organizationId: 'org-001',
       title: 'Compliance Milestone Scheduled',
       message: 'Milestone scheduled: Carlos Mendez W-2 EIN Reconciliation. Target Due Date: Oct 25, 2026.',
-      category: 'DEADLINE_APPROACHING',
+      category: 'COMPLIANCE_DEADLINE',
       targetType: 'DEADLINE',
       targetId: 'dl-301',
       isRead: true,
@@ -688,7 +688,7 @@ async function seed() {
     auditEvents
   };
 
-  const engine = new XmlStorageEngine();
+  const engine = XmlStorageEngine.getInstance();
   await engine.initialize();
   await engine.saveData(fullData, 'Seed fresh enterprise dataset with near-now upcoming deadlines');
 

@@ -3,12 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeadlineService = void 0;
 const uuid_1 = require("uuid");
 const deadlineRepository_1 = require("../repositories/xml/deadlineRepository");
+const recordRepository_1 = require("../repositories/xml/recordRepository");
 const auditService_1 = require("./auditService");
 class DeadlineService {
     deadlineRepo;
+    recordRepo;
     auditService;
     constructor() {
         this.deadlineRepo = new deadlineRepository_1.DeadlineRepository();
+        this.recordRepo = new recordRepository_1.RecordRepository();
         this.auditService = new auditService_1.AuditService();
     }
     async getDeadlines(currentUser, filter) {
@@ -36,6 +39,10 @@ class DeadlineService {
         return deadlines;
     }
     async createDeadline(data, currentUser, reqMeta) {
+        const targetRecord = await this.recordRepo.getById(data.recordId);
+        if (!targetRecord || targetRecord.organizationId !== currentUser.organizationId) {
+            throw new Error(`Target record ID '${data.recordId}' does not exist in your organization.`);
+        }
         const id = `dl-${(0, uuid_1.v4)().substring(0, 8)}`;
         const now = new Date().toISOString();
         const deadline = {
@@ -47,7 +54,9 @@ class DeadlineService {
             dueDate: data.dueDate,
             status: 'ACTIVE',
             priority: data.priority,
-            assignedReviewerId: data.assignedReviewerId,
+            assignedReviewerId: data.assignedReviewerId || currentUser.id,
+            assignedReviewerName: data.assignedReviewerName ||
+                (data.assignedReviewerId === 'usr-admin-01' ? 'Eleanor Vance' : currentUser.name),
             reminderDaysBefore: data.reminderDaysBefore || 7,
             createdAt: now,
             updatedAt: now

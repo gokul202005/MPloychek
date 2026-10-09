@@ -75,5 +75,18 @@ class TelemetryController {
             next(err);
         }
     };
+    clearRequests = async (req, res, next) => {
+        try {
+            this.telemetryService.clearRequests();
+            res.json({
+                success: true,
+                message: 'Telemetry requests log cleared successfully',
+                data: []
+            });
+        }
+        catch (err) {
+            next(err);
+        }
+    };
 }
 exports.TelemetryController = TelemetryController;

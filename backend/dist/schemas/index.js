@@ -54,7 +54,8 @@ exports.reviewRecordSchema = zod_1.z.object({
     reason: zod_1.z.string().min(3, 'A clear justification or reviewer comment is required'),
     publicNotes: zod_1.z.string().optional(),
     internalNotes: zod_1.z.string().optional(),
-    followUpDeadline: zod_1.z.string().optional()
+    followUpDeadline: zod_1.z.string().optional(),
+    backgroundCheckStatus: zod_1.z.enum(['NOT_STARTED', 'IN_PROGRESS', 'PASSED', 'FLAGGED']).optional()
 });
 exports.createEvidenceSchema = zod_1.z.object({
     documentType: zod_1.z.enum([

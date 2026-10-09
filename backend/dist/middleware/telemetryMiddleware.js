@@ -11,6 +11,10 @@ const telemetryMiddleware = (req, res, next) => {
     res.setHeader('X-Request-Id', requestId);
     telemetryService.recordRequestStart();
     res.on('finish', () => {
+        // Do not record the clear endpoint itself so metrics stay reset
+        if (req.path && req.path.includes('/telemetry/clear')) {
+            return;
+        }
         const duration = req.startTime ? Math.round(performance.now() - req.startTime) : 0;
         const simulatedDelay = telemetryService.getSimulatedDelayMs();
         telemetryService.recordRequestEnd({

@@ -87,5 +87,14 @@ class TelemetryService {
     getRecentRequests(limit = 30) {
         return this.recentRequests.slice(0, limit);
     }
+    clearRequests() {
+        this.recentRequests = [];
+        this.totalRequests = 0;
+        this.totalSuccess = 0;
+        this.totalClientErrors = 0;
+        this.totalServerErrors = 0;
+        this.totalDurationMs = 0;
+        this.inFlightRequests = 0;
+    }
 }
 exports.TelemetryService = TelemetryService;

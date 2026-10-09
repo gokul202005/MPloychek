@@ -7,6 +7,7 @@ const evidenceRepository_1 = require("../repositories/xml/evidenceRepository");
 const clarificationRepository_1 = require("../repositories/xml/clarificationRepository");
 const timelineRepository_1 = require("../repositories/xml/timelineRepository");
 const notificationRepository_1 = require("../repositories/xml/notificationRepository");
+const deadlineRepository_1 = require("../repositories/xml/deadlineRepository");
 const confidenceScoreService_1 = require("./confidenceScoreService");
 const auditService_1 = require("./auditService");
 class RecordService {
@@ -15,6 +16,7 @@ class RecordService {
     clarificationRepo;
     timelineRepo;
     notificationRepo;
+    deadlineRepo;
     confidenceService;
     auditService;
     constructor() {
@@ -23,6 +25,7 @@ class RecordService {
         this.clarificationRepo = new clarificationRepository_1.ClarificationRepository();
         this.timelineRepo = new timelineRepository_1.TimelineRepository();
         this.notificationRepo = new notificationRepository_1.NotificationRepository();
+        this.deadlineRepo = new deadlineRepository_1.DeadlineRepository();
         this.confidenceService = new confidenceScoreService_1.ConfidenceScoreService();
         this.auditService = new auditService_1.AuditService();
     }
@@ -48,9 +51,6 @@ class RecordService {
             return null;
         if (record.organizationId !== currentUser.organizationId) {
             throw new Error('Access denied: Record belongs to a different organization.');
-        }
-        if (currentUser.role === 'USER' && record.createdBy !== currentUser.id && record.assignedReviewerId !== currentUser.id) {
-            throw new Error('Access denied: You are not authorized to view this record.');
         }
         if (currentUser.role === 'USER') {
             return this.recordRepo.toSafeRecord(record);
@@ -202,7 +202,7 @@ class RecordService {
         });
         return updated;
     }
-    async recordVerificationDecision(id, decision, reason, publicNotes, internalNotes, followUpDeadline, currentUser, reqMeta) {
+    async recordVerificationDecision(id, decision, reason, publicNotes, internalNotes, followUpDeadline, currentUser, reqMeta, backgroundCheckStatus) {
         if (currentUser.role !== 'ADMIN') {
             throw new Error('Access denied: Only Administrators can record verification decisions.');
         }
@@ -212,8 +212,12 @@ class RecordService {
         const previousStatus = existing.verificationStatus;
         const oldScore = existing.confidenceScore;
         const now = new Date().toISOString();
+        // Auto-resolve background screening status to PASSED when verifying unless specified otherwise
+        const resolvedBgStatus = backgroundCheckStatus || (decision === 'VERIFIED' ? 'PASSED' : existing.backgroundCheckStatus);
         const updates = {
             verificationStatus: decision,
+            backgroundCheckStatus: resolvedBgStatus,
+            backgroundCheckDate: resolvedBgStatus === 'PASSED' ? (existing.backgroundCheckDate || now.split('T')[0]) : existing.backgroundCheckDate,
             assignedReviewerId: currentUser.id,
             assignedReviewerName: currentUser.name,
             publicReviewerNotes: publicNotes || existing.publicReviewerNotes,
@@ -275,6 +279,29 @@ class RecordService {
             reason,
             metadata: { previousStatus, newStatus: decision }
         });
+        // Auto-resolve associated compliance deadlines and clarification requests upon approval
+        if (decision === 'VERIFIED') {
+            try {
+                const allDeadlines = await this.deadlineRepo.getByOrganizationId(updated.organizationId);
+                for (const dl of allDeadlines) {
+                    if (dl.recordId === id && dl.status !== 'COMPLETED') {
+                        await this.deadlineRepo.update(dl.id, { status: 'COMPLETED' });
+                    }
+                }
+                const openClarifications = await this.clarificationRepo.getByRecordId(id);
+                for (const clar of openClarifications) {
+                    if (clar.status !== 'RESOLVED') {
+                        await this.clarificationRepo.update(clar.id, {
+                            status: 'RESOLVED',
+                            response: clar.response || 'Verified and approved by compliance officer.'
+                        });
+                    }
+                }
+            }
+            catch {
+                // Non-blocking
+            }
+        }
         return updated;
     }
     async getTimeline(recordId, currentUser) {

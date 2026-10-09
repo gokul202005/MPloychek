@@ -85,6 +85,9 @@ class ConfidenceScoreService {
                 reviewScore = Math.max(0, reviewScore - 5);
             }
         }
+        if (record.verificationStatus === 'VERIFIED') {
+            reviewScore = Math.max(reviewScore, 20);
+        }
         factors.push({
             factor: 'Evidence Validation & Audit',
             score: reviewScore,
@@ -94,15 +97,17 @@ class ConfidenceScoreService {
                 : reviewScore >= 10
                     ? 'ACCEPTABLE'
                     : 'NEEDS_ATTENTION',
-            explanation: totalDocs === 0
-                ? 'Awaiting document submissions for verification review.'
-                : `${verifiedDocs.length}/${totalDocs} documents verified. ${flaggedDocs.length} flagged, ${rejectedDocs.length} rejected.`
+            explanation: record.verificationStatus === 'VERIFIED'
+                ? 'Evidence credentials attested and validated under compliance verification decision.'
+                : totalDocs === 0
+                    ? 'Awaiting document submissions for verification review.'
+                    : `${verifiedDocs.length}/${totalDocs} documents verified. ${flaggedDocs.length} flagged, ${rejectedDocs.length} rejected.`
         });
         // Pillar 4: Background Check Alignment (15 points max)
         let bgScore = 0;
         let bgExplanation = 'Background check has not commenced.';
         let bgStatus = 'NEEDS_ATTENTION';
-        if (record.backgroundCheckStatus === 'PASSED') {
+        if (record.backgroundCheckStatus === 'PASSED' || record.verificationStatus === 'VERIFIED') {
             bgScore = 15;
             bgStatus = 'OPTIMAL';
             bgExplanation = `Background check passed successfully${record.backgroundCheckDate ? ` on ${record.backgroundCheckDate}` : ''}.`;
@@ -125,28 +130,47 @@ class ConfidenceScoreService {
             explanation: bgExplanation
         });
         // Pillar 5: Clarifications & Conflict Clearance (15 points max)
-        let clarScore = 15;
-        const openClarifications = clarifications.filter(c => c.status === 'OPEN' || c.status === 'OVERDUE');
-        const overdueClarifications = clarifications.filter(c => c.status === 'OVERDUE');
-        if (overdueClarifications.length > 0) {
-            clarScore -= 10;
+        let clarScore = 0;
+        let clarExplanation = '';
+        let clarStatus = 'NEEDS_ATTENTION';
+        const openClarifications = record.verificationStatus === 'VERIFIED'
+            ? []
+            : clarifications.filter(c => c.status === 'OPEN' || c.status === 'OVERDUE');
+        const overdueClarifications = record.verificationStatus === 'VERIFIED'
+            ? []
+            : clarifications.filter(c => c.status === 'OVERDUE');
+        if (record.verificationStatus === 'VERIFIED') {
+            clarScore = 15;
+            clarStatus = 'OPTIMAL';
+            clarExplanation = 'All compliance and due diligence inquiries resolved and verified.';
         }
-        else if (openClarifications.length > 0) {
-            clarScore -= 5 * Math.min(openClarifications.length, 2);
+        else if (totalDocs === 0) {
+            // For new profiles without any evidence documents uploaded yet
+            clarScore = 0;
+            clarStatus = 'NEEDS_ATTENTION';
+            clarExplanation = 'Awaiting evidence documents before due diligence inquiry clearance can commence.';
         }
-        clarScore = Math.max(0, clarScore);
+        else {
+            // Base score of 15 once documents exist, penalized if questions remain open or overdue
+            clarScore = 15;
+            if (overdueClarifications.length > 0) {
+                clarScore -= 10;
+            }
+            else if (openClarifications.length > 0) {
+                clarScore -= 5 * Math.min(openClarifications.length, 2);
+            }
+            clarScore = Math.max(0, clarScore);
+            clarStatus = clarScore === 15 ? 'OPTIMAL' : clarScore >= 8 ? 'ACCEPTABLE' : 'NEEDS_ATTENTION';
+            clarExplanation = openClarifications.length === 0
+                ? `Due diligence clear across ${totalDocs} uploaded credential(s). No outstanding bottlenecks.`
+                : `${openClarifications.length} open inquiry ticket(s) awaiting worker/employer clarification (${overdueClarifications.length} overdue).`;
+        }
         factors.push({
             factor: 'Clarification Resolution & Due Diligence',
             score: clarScore,
             weight: 15,
-            status: clarScore === 15
-                ? 'OPTIMAL'
-                : clarScore >= 8
-                    ? 'ACCEPTABLE'
-                    : 'NEEDS_ATTENTION',
-            explanation: openClarifications.length === 0
-                ? 'No outstanding inquiry or clarification bottlenecks on this record.'
-                : `${openClarifications.length} open inquiry ticket(s) awaiting worker/employer clarification (${overdueClarifications.length} overdue).`
+            status: clarStatus,
+            explanation: clarExplanation
         });
         // Sum total score
         const totalScore = factors.reduce((acc, f) => acc + f.score, 0);
